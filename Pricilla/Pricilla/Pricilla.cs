@@ -13,7 +13,8 @@
 
     public interface IFineGrainedPricilla
     {
-        void SetPosition(Coordinate coordinate);
+        void PositionCursor(Coordinate coordinate);
+        Coordinate FindCursor();
 
         void LeftDown();
         void LeftUp();
@@ -30,7 +31,8 @@
     {       
         public void MoveTo(Coordinate coordinate)
         {
-            this.SetPosition(coordinate);
+            var position = this.FindCursor();
+            this.PositionCursor(coordinate);
         }
 
         public void LeftClick()
@@ -51,11 +53,21 @@
             this.MiddleUp();
         }
 
-        public void SetPosition(Coordinate coordinate)
+        public void PositionCursor(Coordinate coordinate)
         {
             var xPosition = (coordinate.X * 1 << 16) / (uint)GetSystemMetrics(SystemMetric.PrimaryScreenWidth);
-            var yPosition = (coordinate.X * 1 << 16) / (uint)GetSystemMetrics(SystemMetric.PrimaryScreenHeight);
+            var yPosition = (coordinate.Y * 1 << 16) / (uint)GetSystemMetrics(SystemMetric.PrimaryScreenHeight);
             mouse_event(MouseInput.VirtualDesktop | MouseInput.Absolute | MouseInput.Move, xPosition, yPosition, 0, new IntPtr());
+        }
+
+        public Coordinate FindCursor()
+        {
+            CursorCoordinate position;
+            if (GetCursorPos(out position))
+            {
+                return position;
+            }
+            throw new Exception("unable to get cursor position");
         }
 
         public void LeftDown()
@@ -94,6 +106,22 @@
         [DllImport("user32.dll")]
         private static extern int GetSystemMetrics(int metric);
 
+        [DllImport("user32.dll")]
+        private static extern bool GetCursorPos(out CursorCoordinate point);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct CursorCoordinate
+        {
+            public int X;
+            public int Y;
+
+            public static implicit operator Coordinate(CursorCoordinate coordinate)
+            {
+                var x = (uint) coordinate.X;
+                var y = (uint) coordinate.Y;
+                return new Coordinate(x == 0 ? 0 : x + 1,  y == 0 ? 0 : y + 1);
+            }
+        }
 
         private static class SystemMetric
         {
@@ -121,8 +149,8 @@
 
     public class Coordinate
     {
-        public readonly uint Y;
-        public readonly uint X;
+        public uint Y;
+        public uint X;
 
         public Coordinate(uint x, uint y)
         {

@@ -5,14 +5,21 @@
     [TestFixture]
     public class PricillaIntegrationsTests
     {
-        private readonly IPricilla pricilla = new Pricilla();
+        private readonly Pricilla pricilla = new Pricilla();
 
-        [Test]
-        public void Set_cursor_position_and_left_click()
-        {            
-            this.pricilla.MoveTo(new Coordinate(100, 100));
-            this.pricilla.LeftClick();
+        [TestCase((uint)0, (uint)0)]
+        [TestCase((uint)100, (uint)100)]
+        [TestCase((uint)256, (uint)256)]
+        [TestCase((uint)512, (uint)128)]
+        [TestCase((uint)333, (uint)111)]
+        public void Mouse_should_be_at_specified_coordinates_after_it_has_been_moved(uint x, uint y)
+        {
+            this.pricilla.MoveTo(new Coordinate(x, y));
+
+            var position = this.pricilla.FindCursor();
+
+            Assert.That(position.X, Is.EqualTo(x));
+            Assert.That(position.Y, Is.EqualTo(y));
         }
-
     }
 }
