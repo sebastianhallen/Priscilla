@@ -1,11 +1,12 @@
 ﻿namespace Pricilla
 {
     using System;
+    using System.Linq;
     using System.Runtime.InteropServices;
  
     public interface IPricilla
     {
-        void MoveTo(Coordinate coordinate);
+        void MoveTo(Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant);
         void LeftClick();
         void RightClick();
         void MiddleClick();        
@@ -28,13 +29,43 @@
         void MiddleUp();
     }
 
+    public enum MovementSpeed
+    {
+        Instant, 
+        Medium
+    }
+
     public class Pricilla
         : IPricilla, IFineGrainedPricilla
     {
-        public void MoveTo(Coordinate coordinate)
+        public void MoveTo(Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant)
         {
-            this.PositionCursor(coordinate);
-        }
+            if (MovementSpeed.Instant.Equals(movementSpeed))
+            {
+                this.PositionCursor(target);
+                return;
+            }
+            
+            var startPosition = this.FindCursor();
+            var dX = startPosition.X - target.X;
+            var dY = startPosition.Y - target.Y;
+            var distance = Math.Sqrt((dX * dX + dY* dY));
+
+            var pixelsPerSecond = 100;
+            var sectionMovementDuration = 10;
+            var steps = this.CalculateNumberOfMovementSteps(pixelsPerSecond, sectionMovementDuration, distance);
+            var incrementX = dX / steps;
+            var incrementY = dY / steps;
+
+            if (incrementX == 0) incrementX = dX > 0 ? -1 : 1;
+            if (incrementY == 0) incrementY = dY > 0 ? -1 : 1;
+
+            for (var i = 0; i < steps; ++i)
+            {
+                this.MoveCursor(incrementX, incrementY);
+                System.Threading.Thread.Sleep(sectionMovementDuration);
+            }
+        }        
 
         public void LeftClick()
         {
@@ -56,8 +87,8 @@
 
         public void PositionCursor(Coordinate coordinate)
         {
-            //var xPosition = (uint)((coordinate.X * 1 << 16) / GetSystemMetrics(SystemMetric.PrimaryScreenWidth));
-            //var yPosition = (uint)((coordinate.Y * 1 << 16) / GetSystemMetrics(SystemMetric.PrimaryScreenHeight));
+            //var xPosition = (uint)((target.X * 1 << 16) / GetSystemMetrics(SystemMetric.PrimaryScreenWidth));
+            //var yPosition = (uint)((target.Y * 1 << 16) / GetSystemMetrics(SystemMetric.PrimaryScreenHeight));
             //mouse_event(MouseInput.VirtualDesktop | MouseInput.Absolute | MouseInput.Move, xPosition, yPosition, 0, new IntPtr());
             SetCursorPos(coordinate.X, coordinate.Y);
         }
@@ -119,6 +150,16 @@
         [DllImport("user32.dll")]
         private static extern bool SetCursorPos(int x, int y);
 
+        private int CalculateNumberOfMovementSteps(int pixelsPerSecond, int sectionMovementDurationMs, double distance)
+        {
+            var pps = Convert.ToDouble(pixelsPerSecond);
+            var smd = Convert.ToDouble(sectionMovementDurationMs);
+            var ticks = 1000d;
+
+            var steps = (ticks / smd) / (pps / distance);
+            return Convert.ToInt32(steps);
+        }
+
         [StructLayout(LayoutKind.Sequential)]
         private struct CursorCoordinate
         {
@@ -127,8 +168,8 @@
 
             public static implicit operator Coordinate(CursorCoordinate coordinate)
             {
-                //var x = coordinate.X;
-                //var y = coordinate.Y;
+                //var x = target.X;
+                //var y = target.Y;
                 //return new Coordinate(x == 0 ? 0 : x + 1,  y == 0 ? 0 : y + 1);
                 return new Coordinate(coordinate.X, coordinate.Y);
             }

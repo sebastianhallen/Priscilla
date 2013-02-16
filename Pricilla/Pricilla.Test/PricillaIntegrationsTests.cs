@@ -22,12 +22,15 @@
             Assert.That(position.Y, Is.EqualTo(y));
         }
 
-        [Test, Explicit]
-        public void Drag()
+        [TestCase(300, 300, 200, 200)]
+        [TestCase(200, 200, 300, 300)]
+        [TestCase(200, 200, 400, 400)]
+        [Explicit]
+        public void Drag(int fromX, int fromY, int toX, int toY)
         {
-            this.pricilla.MoveTo(new Coordinate(300, 300));
+            this.pricilla.MoveTo(new Coordinate(fromX, fromY));
             this.pricilla.LeftDown();
-            this.pricilla.MoveCursor(-100, -100);
+            this.pricilla.MoveTo(new Coordinate(toX, toY), MovementSpeed.Medium);
             this.pricilla.LeftUp();
         }
     }
