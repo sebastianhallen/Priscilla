@@ -1,16 +1,6 @@
 ﻿namespace Pricilla
 {
     using System;
-    using System.Collections.Generic;
-
-    public interface IPricilla
-    {
-        void MoveTo(Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant);
-        void LeftClick();
-        void RightClick();
-        void MiddleClick();
-        void DragAndDrop(Coordinate coordinate, Coordinate coordinate1);
-    }
 
     public class Pricilla
         : IPricilla
@@ -22,6 +12,32 @@
             this.mouse = mouse;
         }
 
+        public void LeftClick()
+        {
+            this.mouse.LeftDown();
+            this.mouse.LeftUp();
+        }
+
+        public void RightClick()
+        {
+            this.mouse.RightDown();
+            this.mouse.RightUp();
+        }
+
+        public void MiddleClick()
+        {
+            this.mouse.MiddleDown();
+            this.mouse.MiddleUp();
+        }
+
+        public void DragAndDrop(Coordinate from, Coordinate to)
+        {
+            this.mouse.PositionCursor(from);
+            this.mouse.LeftDown();
+            this.MoveTo(to, MovementSpeed.Medium);
+            this.mouse.LeftUp();
+        }
+
         public void MoveTo(Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant)
         {
             if (MovementSpeed.Instant.Equals(movementSpeed))
@@ -29,7 +45,7 @@
                 this.mouse.PositionCursor(target);
                 return;
             }
-            
+
             //calculate the distance to drag as a double to avoid rounding errors later when converting to int
             var startPosition = this.mouse.FindCursor();
             var dX = Convert.ToDouble(target.X) - Convert.ToDouble(startPosition.X);
@@ -69,7 +85,7 @@
 
             //verify that we are not too far off from the target position
             var endposition = this.mouse.FindCursor();
-            System.Diagnostics.Debug.Assert((int) this.CalculateDistance(startPosition, endposition) > 5, string.Format("end distance is {0} pixels off", this.CalculateDistance(startPosition, endposition)));
+            System.Diagnostics.Debug.Assert((int)this.CalculateDistance(startPosition, endposition) > 5, string.Format("end distance is {0} pixels off", this.CalculateDistance(startPosition, endposition)));
 
             //adjusting for rounding errors
             this.mouse.PositionCursor(new Coordinate(target.X, target.Y));
@@ -85,32 +101,6 @@
         private double Hypotenuse(double a, double b)
         {
             return Math.Sqrt(a * a + b * b);
-        }
-
-        public void LeftClick()
-        {
-            this.mouse.LeftDown();
-            this.mouse.LeftUp();
-        }
-
-        public void RightClick()
-        {
-            this.mouse.RightDown();
-            this.mouse.RightUp();
-        }
-
-        public void MiddleClick()
-        {
-            this.mouse.MiddleDown();
-            this.mouse.MiddleUp();
-        }
-
-        public void DragAndDrop(Coordinate from, Coordinate to)
-        {
-            this.mouse.PositionCursor(from);
-            this.mouse.LeftDown();
-            this.MoveTo(to, MovementSpeed.Medium);
-            this.mouse.LeftUp();
         }
 
         private double CalculateNumberOfMovementSteps(int pixelsPerSecond, int sectionMovementDurationMs, double distance)
