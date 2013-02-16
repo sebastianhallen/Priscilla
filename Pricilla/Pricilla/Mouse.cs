@@ -8,9 +8,6 @@
     {
         public void PositionCursor(Coordinate coordinate)
         {
-            //var xPosition = (uint)((target.X * 1 << 16) / GetSystemMetrics(SystemMetric.PrimaryScreenWidth));
-            //var yPosition = (uint)((target.Y * 1 << 16) / GetSystemMetrics(SystemMetric.PrimaryScreenHeight));
-            //mouse_event(MouseInput.VirtualDesktop | MouseInput.Absolute | MouseInput.Move, xPosition, yPosition, 0, new IntPtr());
             SetCursorPos(coordinate.X, coordinate.Y);
         }
 
@@ -61,10 +58,7 @@
 
         [DllImport("user32.dll")]
         private static extern void mouse_event(UInt32 dwFlags, UInt32 dx, UInt32 dy, UInt32 dwData, IntPtr dwExtraInfo);
-
-        //[DllImport("user32.dll")]
-        //private static extern int GetSystemMetrics(int metric);
-
+       
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(out CursorCoordinate point);
 
@@ -79,18 +73,9 @@
 
             public static implicit operator Coordinate(CursorCoordinate coordinate)
             {
-                //var x = target.X;
-                //var y = target.Y;
-                //return new Coordinate(x == 0 ? 0 : x + 1,  y == 0 ? 0 : y + 1);
                 return new Coordinate(coordinate.X, coordinate.Y);
             }
         }
-
-        //private static class SystemMetric
-        //{
-        //    public const int PrimaryScreenWidth = 0; //width of primary monitor
-        //    public const int PrimaryScreenHeight = 1; //height of primary monitor
-        //}
 
         private static class MouseInput
         {
