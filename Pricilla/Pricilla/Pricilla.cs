@@ -84,8 +84,9 @@
             }
 
             //verify that we are not too far off from the target position
-            var endposition = this.mouse.FindCursor();
-            System.Diagnostics.Debug.Assert((int)this.CalculateDistance(startPosition, endposition) > 5, string.Format("end distance is {0} pixels off", this.CalculateDistance(startPosition, endposition)));
+            var endPosition = this.mouse.FindCursor();
+            var distanceFromWantedPosition = (int)this.CalculateDistance(target, endPosition);
+            System.Diagnostics.Debug.Assert(!(Math.Abs(distanceFromWantedPosition) > 5), string.Format("end distance is {0} pixels off", distanceFromWantedPosition));
 
             //adjusting for rounding errors
             this.mouse.PositionCursor(new Coordinate(target.X, target.Y));

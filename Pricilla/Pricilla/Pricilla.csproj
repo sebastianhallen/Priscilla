@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Coordinate.cs" />
     <Compile Include="IMouse.cs" />
+    <Compile Include="IPricilla.cs" />
     <Compile Include="Mouse.cs" />
     <Compile Include="MovementSpeed.cs" />
     <Compile Include="Pricilla.cs" />
