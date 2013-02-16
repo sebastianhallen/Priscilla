@@ -10,7 +10,7 @@
         [Test]
         public void Set_cursor_position_and_left_click()
         {            
-            this.pricilla.SetPosition(new Coordinate(0, 0));
+            this.pricilla.MoveTo(new Coordinate(100, 100));
             this.pricilla.LeftClick();
         }
 
