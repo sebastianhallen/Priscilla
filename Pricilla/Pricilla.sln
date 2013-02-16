@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pricilla", "Pricilla\Pricilla.csproj", "{21BC5B3C-209A-4F36-A798-E5A9618022A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pricilla.Test", "Pricilla.Test\Pricilla.Test.csproj", "{C3049D6B-AA75-4DA8-BF92-3130C37F7B01}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21BC5B3C-209A-4F36-A798-E5A9618022A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21BC5B3C-209A-4F36-A798-E5A9618022A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21BC5B3C-209A-4F36-A798-E5A9618022A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21BC5B3C-209A-4F36-A798-E5A9618022A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3049D6B-AA75-4DA8-BF92-3130C37F7B01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3049D6B-AA75-4DA8-BF92-3130C37F7B01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3049D6B-AA75-4DA8-BF92-3130C37F7B01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3049D6B-AA75-4DA8-BF92-3130C37F7B01}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
