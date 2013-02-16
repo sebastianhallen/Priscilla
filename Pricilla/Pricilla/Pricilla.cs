@@ -15,6 +15,8 @@
     {
         void PositionCursor(Coordinate coordinate);
         Coordinate FindCursor();
+        void MoveCursor(int dx, int dy);
+
 
         void LeftDown();
         void LeftUp();
@@ -28,17 +30,16 @@
 
     public class Pricilla
         : IPricilla, IFineGrainedPricilla
-    {       
+    {
         public void MoveTo(Coordinate coordinate)
         {
-            var position = this.FindCursor();
             this.PositionCursor(coordinate);
         }
 
         public void LeftClick()
         {
             this.LeftDown();
-            this.LeftUp();         
+            this.LeftUp();
         }
 
         public void RightClick()
@@ -55,9 +56,10 @@
 
         public void PositionCursor(Coordinate coordinate)
         {
-            var xPosition = (coordinate.X * 1 << 16) / (uint)GetSystemMetrics(SystemMetric.PrimaryScreenWidth);
-            var yPosition = (coordinate.Y * 1 << 16) / (uint)GetSystemMetrics(SystemMetric.PrimaryScreenHeight);
-            mouse_event(MouseInput.VirtualDesktop | MouseInput.Absolute | MouseInput.Move, xPosition, yPosition, 0, new IntPtr());
+            //var xPosition = (uint)((coordinate.X * 1 << 16) / GetSystemMetrics(SystemMetric.PrimaryScreenWidth));
+            //var yPosition = (uint)((coordinate.Y * 1 << 16) / GetSystemMetrics(SystemMetric.PrimaryScreenHeight));
+            //mouse_event(MouseInput.VirtualDesktop | MouseInput.Absolute | MouseInput.Move, xPosition, yPosition, 0, new IntPtr());
+            SetCursorPos(coordinate.X, coordinate.Y);
         }
 
         public Coordinate FindCursor()
@@ -68,6 +70,11 @@
                 return position;
             }
             throw new Exception("unable to get cursor position");
+        }
+
+        public void MoveCursor(int dx, int dy)
+        {
+            mouse_event(MouseInput.VirtualDesktop | MouseInput.Move, (uint)dx, (uint)dy, 0, new IntPtr()); 
         }
 
         public void LeftDown()
@@ -103,11 +110,14 @@
         [DllImport("user32.dll")]
         private static extern void mouse_event(UInt32 dwFlags, UInt32 dx, UInt32 dy, UInt32 dwData, IntPtr dwExtraInfo);
 
-        [DllImport("user32.dll")]
-        private static extern int GetSystemMetrics(int metric);
+        //[DllImport("user32.dll")]
+        //private static extern int GetSystemMetrics(int metric);
 
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(out CursorCoordinate point);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetCursorPos(int x, int y);
 
         [StructLayout(LayoutKind.Sequential)]
         private struct CursorCoordinate
@@ -117,17 +127,18 @@
 
             public static implicit operator Coordinate(CursorCoordinate coordinate)
             {
-                var x = (uint) coordinate.X;
-                var y = (uint) coordinate.Y;
-                return new Coordinate(x == 0 ? 0 : x + 1,  y == 0 ? 0 : y + 1);
+                //var x = coordinate.X;
+                //var y = coordinate.Y;
+                //return new Coordinate(x == 0 ? 0 : x + 1,  y == 0 ? 0 : y + 1);
+                return new Coordinate(coordinate.X, coordinate.Y);
             }
         }
 
-        private static class SystemMetric
-        {
-            public const int PrimaryScreenWidth = 0; //width of primary monitor
-            public const int PrimaryScreenHeight = 1; //height of primary monitor
-        }
+        //private static class SystemMetric
+        //{
+        //    public const int PrimaryScreenWidth = 0; //width of primary monitor
+        //    public const int PrimaryScreenHeight = 1; //height of primary monitor
+        //}
 
         private static class MouseInput
         {
@@ -149,10 +160,10 @@
 
     public class Coordinate
     {
-        public uint Y;
-        public uint X;
+        public int Y;
+        public int X;
 
-        public Coordinate(uint x, uint y)
+        public Coordinate(int x, int y)
         {
             this.X = x;
             this.Y = y;

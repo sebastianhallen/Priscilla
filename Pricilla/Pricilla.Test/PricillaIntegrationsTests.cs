@@ -7,12 +7,12 @@
     {
         private readonly Pricilla pricilla = new Pricilla();
 
-        [TestCase((uint)0, (uint)0)]
-        [TestCase((uint)100, (uint)100)]
-        [TestCase((uint)256, (uint)256)]
-        [TestCase((uint)512, (uint)128)]
-        [TestCase((uint)333, (uint)111)]
-        public void Mouse_should_be_at_specified_coordinates_after_it_has_been_moved(uint x, uint y)
+        [TestCase(0, 0)]
+        [TestCase(100, 100)]
+        [TestCase(256, 256)]
+        [TestCase(512, 128)]
+        [TestCase(333, 111)]
+        public void Mouse_should_be_at_specified_coordinates_after_it_has_been_moved(int x, int y)
         {
             this.pricilla.MoveTo(new Coordinate(x, y));
 
@@ -20,6 +20,15 @@
 
             Assert.That(position.X, Is.EqualTo(x));
             Assert.That(position.Y, Is.EqualTo(y));
+        }
+
+        [Test, Explicit]
+        public void Drag()
+        {
+            this.pricilla.MoveTo(new Coordinate(300, 300));
+            this.pricilla.LeftDown();
+            this.pricilla.MoveCursor(-100, -100);
+            this.pricilla.LeftUp();
         }
     }
 }
