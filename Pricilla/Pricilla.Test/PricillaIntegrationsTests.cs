@@ -5,7 +5,16 @@
     [TestFixture]
     public class PricillaIntegrationsTests
     {
-        private readonly Pricilla pricilla = new Pricilla();
+        private IMouse mouse;
+        private IPricilla pricilla;
+
+        [SetUp]
+        public void Before()
+        {
+            this.mouse = new Mouse();
+            this.pricilla = new Pricilla(this.mouse);
+
+        }
 
         [TestCase(0, 0)]
         [TestCase(100, 100)]
@@ -16,8 +25,7 @@
         {
             this.pricilla.MoveTo(new Coordinate(x, y));
 
-            var position = this.pricilla.FindCursor();
-
+            var position = this.mouse.FindCursor();
             Assert.That(position.X, Is.EqualTo(x));
             Assert.That(position.Y, Is.EqualTo(y));
         }
@@ -28,10 +36,7 @@
         [Explicit]
         public void Drag(int fromX, int fromY, int toX, int toY)
         {
-            this.pricilla.MoveTo(new Coordinate(fromX, fromY));
-            this.pricilla.LeftDown();
-            this.pricilla.MoveTo(new Coordinate(toX, toY), MovementSpeed.Medium);
-            this.pricilla.LeftUp();
+            this.pricilla.DragAndDrop(new Coordinate(fromX, fromY), new Coordinate(toX, toY));            
         }
     }
 }

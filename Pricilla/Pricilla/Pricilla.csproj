@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Coordinate.cs" />
+    <Compile Include="IMouse.cs" />
+    <Compile Include="Mouse.cs" />
+    <Compile Include="MovementSpeed.cs" />
     <Compile Include="Pricilla.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

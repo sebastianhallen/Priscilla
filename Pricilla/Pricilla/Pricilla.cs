@@ -1,52 +1,35 @@
 ﻿namespace Pricilla
 {
     using System;
-    using System.Linq;
-    using System.Runtime.InteropServices;
- 
+
     public interface IPricilla
     {
         void MoveTo(Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant);
         void LeftClick();
         void RightClick();
-        void MiddleClick();        
-    }
-
-    public interface IFineGrainedPricilla
-    {
-        void PositionCursor(Coordinate coordinate);
-        Coordinate FindCursor();
-        void MoveCursor(int dx, int dy);
-
-
-        void LeftDown();
-        void LeftUp();
-        
-        void RightDown();
-        void RightUp();
-
-        void MiddleDown();
-        void MiddleUp();
-    }
-
-    public enum MovementSpeed
-    {
-        Instant, 
-        Medium
+        void MiddleClick();
+        void DragAndDrop(Coordinate coordinate, Coordinate coordinate1);
     }
 
     public class Pricilla
-        : IPricilla, IFineGrainedPricilla
+        : IPricilla
     {
+        private readonly IMouse mouse;
+
+        public Pricilla(IMouse mouse)
+        {
+            this.mouse = mouse;
+        }
+
         public void MoveTo(Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant)
         {
             if (MovementSpeed.Instant.Equals(movementSpeed))
             {
-                this.PositionCursor(target);
+                this.mouse.PositionCursor(target);
                 return;
             }
             
-            var startPosition = this.FindCursor();
+            var startPosition = this.mouse.FindCursor();
             var dX = startPosition.X - target.X;
             var dY = startPosition.Y - target.Y;
             var distance = Math.Sqrt((dX * dX + dY* dY));
@@ -62,93 +45,36 @@
 
             for (var i = 0; i < steps; ++i)
             {
-                this.MoveCursor(incrementX, incrementY);
+                this.mouse.MoveCursor(incrementX, incrementY);
                 System.Threading.Thread.Sleep(sectionMovementDuration);
             }
         }        
 
         public void LeftClick()
         {
-            this.LeftDown();
-            this.LeftUp();
+            this.mouse.LeftDown();
+            this.mouse.LeftUp();
         }
 
         public void RightClick()
         {
-            this.RightDown();
-            this.RightUp();
+            this.mouse.RightDown();
+            this.mouse.RightUp();
         }
 
         public void MiddleClick()
         {
-            this.MiddleDown();
-            this.MiddleUp();
+            this.mouse.MiddleDown();
+            this.mouse.MiddleUp();
         }
 
-        public void PositionCursor(Coordinate coordinate)
+        public void DragAndDrop(Coordinate from, Coordinate to)
         {
-            //var xPosition = (uint)((target.X * 1 << 16) / GetSystemMetrics(SystemMetric.PrimaryScreenWidth));
-            //var yPosition = (uint)((target.Y * 1 << 16) / GetSystemMetrics(SystemMetric.PrimaryScreenHeight));
-            //mouse_event(MouseInput.VirtualDesktop | MouseInput.Absolute | MouseInput.Move, xPosition, yPosition, 0, new IntPtr());
-            SetCursorPos(coordinate.X, coordinate.Y);
+            this.mouse.PositionCursor(from);
+            this.mouse.LeftDown();
+            this.MoveTo(to, MovementSpeed.Medium);
+            this.mouse.LeftUp();
         }
-
-        public Coordinate FindCursor()
-        {
-            CursorCoordinate position;
-            if (GetCursorPos(out position))
-            {
-                return position;
-            }
-            throw new Exception("unable to get cursor position");
-        }
-
-        public void MoveCursor(int dx, int dy)
-        {
-            mouse_event(MouseInput.VirtualDesktop | MouseInput.Move, (uint)dx, (uint)dy, 0, new IntPtr()); 
-        }
-
-        public void LeftDown()
-        {
-            mouse_event(MouseInput.LeftDown, 0, 0, 0, new IntPtr());
-        }
-
-        public void LeftUp()
-        {
-            mouse_event(MouseInput.LeftUp, 0, 0, 0, new IntPtr());
-        }
-
-        public void RightDown()
-        {
-            mouse_event(MouseInput.RightDown, 0, 0, 0, new IntPtr());
-        }
-
-        public void RightUp()
-        {
-            mouse_event(MouseInput.RightUp, 0, 0, 0, new IntPtr());
-        }
-
-        public void MiddleDown()
-        {
-            mouse_event(MouseInput.MiddleDown, 0, 0, 0, new IntPtr());
-        }
-
-        public void MiddleUp()
-        {
-            mouse_event(MouseInput.MiddleUp, 0, 0, 0, new IntPtr());
-        }
-
-        [DllImport("user32.dll")]
-        private static extern void mouse_event(UInt32 dwFlags, UInt32 dx, UInt32 dy, UInt32 dwData, IntPtr dwExtraInfo);
-
-        //[DllImport("user32.dll")]
-        //private static extern int GetSystemMetrics(int metric);
-
-        [DllImport("user32.dll")]
-        private static extern bool GetCursorPos(out CursorCoordinate point);
-
-        [DllImport("user32.dll")]
-        private static extern bool SetCursorPos(int x, int y);
 
         private int CalculateNumberOfMovementSteps(int pixelsPerSecond, int sectionMovementDurationMs, double distance)
         {
@@ -158,56 +84,6 @@
 
             var steps = (ticks / smd) / (pps / distance);
             return Convert.ToInt32(steps);
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct CursorCoordinate
-        {
-            public int X;
-            public int Y;
-
-            public static implicit operator Coordinate(CursorCoordinate coordinate)
-            {
-                //var x = target.X;
-                //var y = target.Y;
-                //return new Coordinate(x == 0 ? 0 : x + 1,  y == 0 ? 0 : y + 1);
-                return new Coordinate(coordinate.X, coordinate.Y);
-            }
-        }
-
-        //private static class SystemMetric
-        //{
-        //    public const int PrimaryScreenWidth = 0; //width of primary monitor
-        //    public const int PrimaryScreenHeight = 1; //height of primary monitor
-        //}
-
-        private static class MouseInput
-        {
-            public const uint Absolute      = 0x8000;   //The dx and dy parameters contain normalized absolute coordinates. If not set, those parameters contain relative data
-            public const uint VirtualDesktop= 0x4000;   //Maps coordinates to the entire desktop. Must be used with MouseInput.Absolute. 
-            public const uint LeftDown      = 0x0002;   //The left button is down.
-            public const uint LeftUp        = 0x0004;   //The left button is up.
-            public const uint MiddleDown    = 0x0020;   //The middle button is down.
-            public const uint MiddleUp      = 0x0040;   //The middle button is up.
-            public const uint Move          = 0x0001;   //Movement occurred.
-            public const uint RightDown     = 0x0008;   //The right button is down.
-            public const uint RightUp       = 0x0010;   //The right button is up.
-            public const uint Wheel         = 0x0800;   //The wheel has been moved, if the mouse has a wheel. The amount of movement is specified in dwData
-            public const uint XDown         = 0x0080;   //An X button was pressed.
-            public const uint XUp           = 0x0100;   //An X button was released.
-            public const uint HWheel        = 0x1000;   //The wheel button is tilted.
-        }
-    }
-
-    public class Coordinate
-    {
-        public int Y;
-        public int X;
-
-        public Coordinate(int x, int y)
-        {
-            this.X = x;
-            this.Y = y;
         }
     }
 }
