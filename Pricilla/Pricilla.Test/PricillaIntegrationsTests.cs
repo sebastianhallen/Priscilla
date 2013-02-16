@@ -40,7 +40,9 @@
         [TestCase(400, 200, 200, 200)]
         [TestCase(200, 200, 200, 400)]
         [TestCase(200, 400, 200, 200)]
-        public void Drag(int fromX, int fromY, int toX, int toY)
+        [TestCase(0, 0, 0, 0)]
+        [TestCase(100, 100, 100, 100)]
+        public void Drag_and_drop_should_end_at_target_position(int fromX, int fromY, int toX, int toY)
         {
             this.pricilla.DragAndDrop(new Coordinate(fromX, fromY), new Coordinate(toX, toY));
 
