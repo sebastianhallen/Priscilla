@@ -50,8 +50,10 @@
 
             //calculate the distance to drag as a double to avoid rounding errors later when converting to int
             var startPosition = this.mouse.FindCursor();
-            var dX = Convert.ToDouble(targetWithOffset.X) - Convert.ToDouble(startPosition.X);
-            var dY = Convert.ToDouble(targetWithOffset.Y) - Convert.ToDouble(startPosition.Y);
+            var startX = Convert.ToDouble(startPosition.X);
+            var startY = Convert.ToDouble(startPosition.Y);
+            var dX = Convert.ToDouble(targetWithOffset.X) - startX;
+            var dY = Convert.ToDouble(targetWithOffset.Y) - startY;
             var distance = this.Hypotenuse(dX, dY);
 
             //calculate number of steps needed to perform the move operation
@@ -65,18 +67,16 @@
 
             //we need to compensate for int rounding so save the fractions for the next round
             var xRemainingFraction = 0.0d;
-            var yRemainingFraction = 0.0d;
-            var startX = Convert.ToDouble(startPosition.X);
-            var startY = Convert.ToDouble(startPosition.Y);
-            for (var i = 1; i < Convert.ToInt32(steps); ++i)
+            var yRemainingFraction = 0.0d;            
+            for (var i = 1; i < steps; ++i)
             {
                 //apply the fraction part saved from the last loop
-                var targetDX = incrementX + xRemainingFraction;
-                var targetDY = incrementY + yRemainingFraction;
+                var targetDx = incrementX + xRemainingFraction;
+                var targetDy = incrementY + yRemainingFraction;
 
                 //save the fraction for the next loop
-                xRemainingFraction = targetDX - (int)targetDX;
-                yRemainingFraction = targetDY - (int)targetDY;
+                xRemainingFraction = targetDx - (int)targetDx;
+                yRemainingFraction = targetDy - (int)targetDy;
 
                 //position cursor to the int part of the coordinates
                 var x = (int)((incrementX) * i + startX);
@@ -106,13 +106,13 @@
             return Math.Sqrt(a * a + b * b);
         }
 
-        private double CalculateNumberOfMovementSteps(int pixelsPerSecond, int sectionMovementDurationMs, double distance)
+        private int CalculateNumberOfMovementSteps(int pixelsPerSecond, int sectionMovementDurationMs, double distance)
         {
             var pps = Convert.ToDouble(pixelsPerSecond);
             var smd = Convert.ToDouble(sectionMovementDurationMs);
             var ticks = 1000d;
 
-            return (ticks / smd) / (pps / distance);
+            return Convert.ToInt32((ticks / smd) / (pps / distance));
         }        
     }
 }
