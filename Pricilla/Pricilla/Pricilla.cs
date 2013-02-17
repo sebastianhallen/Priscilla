@@ -30,26 +30,28 @@
             this.mouse.MiddleUp();
         }
 
-        public void DragAndDrop(Coordinate from, Coordinate to)
+        public void DragAndDrop(Coordinate origin, Coordinate target, Coordinate offset = null)
         {
-            this.mouse.PositionCursor(from);
+            this.mouse.PositionCursor(origin + offset);
             this.mouse.LeftDown();
-            this.MoveTo(to, MovementSpeed.Medium);
+            this.MoveTo(target, MovementSpeed.Medium, offset: offset);
             this.mouse.LeftUp();
         }
 
-        public void MoveTo(Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant)
+        public void MoveTo(Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant, Coordinate offset = null)
         {
+            var targetWithOffset = target + offset;
+
             if (MovementSpeed.Instant.Equals(movementSpeed))
             {
-                this.mouse.PositionCursor(target);
+                this.mouse.PositionCursor(targetWithOffset);
                 return;
             }
 
             //calculate the distance to drag as a double to avoid rounding errors later when converting to int
             var startPosition = this.mouse.FindCursor();
-            var dX = Convert.ToDouble(target.X) - Convert.ToDouble(startPosition.X);
-            var dY = Convert.ToDouble(target.Y) - Convert.ToDouble(startPosition.Y);
+            var dX = Convert.ToDouble(targetWithOffset.X) - Convert.ToDouble(startPosition.X);
+            var dY = Convert.ToDouble(targetWithOffset.Y) - Convert.ToDouble(startPosition.Y);
             var distance = this.Hypotenuse(dX, dY);
 
             //calculate number of steps needed to perform the move operation
@@ -85,11 +87,11 @@
 
             //verify that we are not too far off from the target position
             var endPosition = this.mouse.FindCursor();
-            var distanceFromWantedPosition = (int)this.CalculateDistance(target, endPosition);
+            var distanceFromWantedPosition = (int)this.CalculateDistance(targetWithOffset, endPosition);
             System.Diagnostics.Debug.Assert(!(Math.Abs(distanceFromWantedPosition) > 5), string.Format("end distance is {0} pixels off", distanceFromWantedPosition));
 
             //adjusting for rounding errors
-            this.mouse.PositionCursor(new Coordinate(target.X, target.Y));
+            this.mouse.PositionCursor(new Coordinate(targetWithOffset.X, targetWithOffset.Y));
         }
 
         private double CalculateDistance(Coordinate a, Coordinate b)
