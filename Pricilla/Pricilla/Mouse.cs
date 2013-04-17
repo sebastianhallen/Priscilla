@@ -21,9 +21,9 @@
             throw new Exception("unable to get cursor position");
         }
 
-        public void MoveCursor(int dx, int dy)
+        public void MoveCursor(int dy, int dx)
         {
-            mouse_event(MouseInput.Move, (uint)dx, (uint)dy, 0, new IntPtr());
+            mouse_event(MouseInput.Move, (uint)dy, (uint)dx, 0, new IntPtr());
         }
 
         public void LeftDown()
@@ -57,7 +57,7 @@
         }
 
         [DllImport("user32.dll")]
-        private static extern void mouse_event(UInt32 dwFlags, UInt32 dx, UInt32 dy, UInt32 dwData, IntPtr dwExtraInfo);
+        private static extern void mouse_event(UInt32 dwFlags, UInt32 dy, UInt32 dx, UInt32 dwData, IntPtr dwExtraInfo);
        
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(out CursorCoordinate point);

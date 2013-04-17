@@ -2,20 +2,18 @@
 {
     using FakeItEasy;
     using NUnit.Framework;
+    using Pricilla.Extension;
 
     [TestFixture]
     public class PricillaIntegrationsTests
     {
         private IMouse mouse;
-        private IPricilla pricilla;
 
         [SetUp]
         public void Before()
         {
             this.mouse = A.Fake<IMouse>(wrapped => wrapped.Wrapping(new Mouse()));
             A.CallTo(() => this.mouse.LeftDown()).Invokes(_ => { });
-
-            this.pricilla = new Pricilla(this.mouse);
         }
 
         [TestCase(0, 0)]
@@ -25,7 +23,7 @@
         [TestCase(333, 111)]
         public void Mouse_should_be_at_specified_coordinates_after_it_has_been_moved(int x, int y)
         {
-            this.pricilla.MoveTo(new Coordinate(x, y));
+            this.mouse.MoveTo(new Coordinate(x, y));
 
             var position = this.mouse.FindCursor();
             Assert.That(position.X, Is.EqualTo(x));
@@ -36,7 +34,7 @@
         [TestCase(-50, -75)]
         public void Should_be_possible_to_specify_a_position_offset_for_move_operations(int xOffset, int yOffset)
         {
-            this.pricilla.MoveTo(new Coordinate(100, 100), offset: new Coordinate(xOffset, yOffset));
+            this.mouse.MoveTo(new Coordinate(100, 100), offset: new Coordinate(xOffset, yOffset));
 
             var position = this.mouse.FindCursor();
             Assert.That(position.X, Is.EqualTo(100 + xOffset));
@@ -46,7 +44,7 @@
         [Test]
         public void Should_be_possible_to_specify_a_position_offset_for_drag_operations()
         {
-            this.pricilla.DragAndDrop(new Coordinate(100, 100), new Coordinate(200, 200), offset: new Coordinate(50, 50));
+            this.mouse.DragAndDrop(new Coordinate(100, 100), new Coordinate(200, 200), offset: new Coordinate(50, 50));
 
             var position = this.mouse.FindCursor();
             A.CallTo(() => this.mouse.PositionCursor(A<Coordinate>.That.Matches(coordinate => coordinate.X == 150 && coordinate.Y == 150))).MustHaveHappened();
@@ -67,7 +65,7 @@
         [TestCase(100, 100, 100, 100)]
         public void Drag_and_drop_should_end_at_target_position(int fromX, int fromY, int toX, int toY)
         {
-            this.pricilla.DragAndDrop(new Coordinate(fromX, fromY), new Coordinate(toX, toY));
+            this.mouse.DragAndDrop(new Coordinate(fromX, fromY), new Coordinate(toX, toY));
 
             var position = this.mouse.FindCursor();
             Assert.That(position.X, Is.EqualTo(toX));
