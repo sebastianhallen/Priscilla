@@ -11,9 +11,6 @@ mouse.PositionCursor(new Coordinate(100, 200));
 //get to the current location of the cursor
 var currentPosition = mouse.FindCursor();
 
-//relative move of the cursor
-mouse.MoveCursor(50, -50)
-
 //left button down
 mouse.LeftDown();
 
