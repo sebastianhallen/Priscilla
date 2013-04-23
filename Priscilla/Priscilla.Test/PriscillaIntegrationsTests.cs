@@ -1,11 +1,11 @@
-﻿namespace Pricilla.Test
+﻿namespace Priscilla.Test
 {
     using FakeItEasy;
     using NUnit.Framework;
-    using Pricilla.Extension;
+    using Priscilla.Extension;
 
     [TestFixture]
-    public class PricillaIntegrationsTests
+    public class PriscillaIntegrationsTests
     {
         private IMouse mouse;
 

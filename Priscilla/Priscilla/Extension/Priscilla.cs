@@ -1,6 +1,7 @@
-﻿namespace Pricilla.Extension
+﻿namespace Priscilla.Extension
 {
     using System;
+    using Priscilla;
 
     public static class ClickExtensions
     {

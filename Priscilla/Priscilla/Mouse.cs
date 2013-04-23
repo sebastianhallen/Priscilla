@@ -1,4 +1,4 @@
-﻿namespace Pricilla
+﻿namespace Priscilla
 {
     using System;
     using System.Runtime.InteropServices;
