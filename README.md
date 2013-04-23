@@ -23,7 +23,7 @@ mouse.LeftUp();
 
 
 
-//Higher level actions are available as extensions in Pricilla.Extension
+//Higher level actions are available as extensions in Priscilla.Extension
 
 //move the cursor 
 var offset = new Coordinate(20, 20);
