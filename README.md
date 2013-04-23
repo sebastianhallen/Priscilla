@@ -1,4 +1,4 @@
-Pricilla
+Priscilla
 ========
 
 A small mouse interop library.
