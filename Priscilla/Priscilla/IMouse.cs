@@ -4,7 +4,7 @@
     {
         void PositionCursor(Coordinate coordinate);
         Coordinate FindCursor();
-        void MoveCursor(int dx, int dy);
+        //void MoveCursor(int dy, int dx);
 
 
         void LeftDown();

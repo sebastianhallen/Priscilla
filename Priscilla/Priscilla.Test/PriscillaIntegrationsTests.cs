@@ -72,5 +72,26 @@
             Assert.That(position.Y, Is.EqualTo(toY));
         }
 
+        //[Test]
+        //public void Should_be_possible_to_move_the_cursor_a_relative_distance()
+        //{
+        //    this.mouse.MoveTo(new Coordinate(100, 100));
+
+        //    this.mouse.MoveCursor(75, 175);
+
+        //    var currentPosition = this.mouse.FindCursor();
+        //    Assert.That(currentPosition, Is.EqualTo(new Coordinate(175, 25)));
+        //}
+
+        [Test]
+        public void Should_find_the_cursor_where_I_left_it()
+        {
+            var coordinate = new Coordinate(123, 321);
+            this.mouse.MoveTo(coordinate);
+
+            var position = this.mouse.FindCursor();
+
+            Assert.That(position, Is.EqualTo(coordinate));
+        }
     }
 }

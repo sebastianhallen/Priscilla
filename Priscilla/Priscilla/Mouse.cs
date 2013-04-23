@@ -21,10 +21,10 @@
             throw new Exception("unable to get cursor position");
         }
 
-        public void MoveCursor(int dy, int dx)
-        {
-            mouse_event(MouseInput.Move, (uint)dy, (uint)dx, 0, new IntPtr());
-        }
+        //public void MoveCursor(int dy, int dx)
+        //{
+        //    mouse_event(MouseInput.Move, (uint)dy, (uint)dx, 0, new IntPtr());
+        //}
 
         public void LeftDown()
         {
