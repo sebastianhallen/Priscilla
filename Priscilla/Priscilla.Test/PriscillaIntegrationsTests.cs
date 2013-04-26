@@ -23,7 +23,7 @@
         [TestCase(333, 111)]
         public void Mouse_should_be_at_specified_coordinates_after_it_has_been_moved(int x, int y)
         {
-            this.mouse.MoveTo(new Coordinate(x, y));
+            this.mouse.MoveTo(new Coordinate(x, y), MovementSpeed.Fast);
 
             var position = this.mouse.FindCursor();
             Assert.That(position.X, Is.EqualTo(x));
@@ -65,7 +65,7 @@
         [TestCase(100, 100, 100, 100)]
         public void Drag_and_drop_should_end_at_target_position(int fromX, int fromY, int toX, int toY)
         {
-            this.mouse.DragAndDrop(new Coordinate(fromX, fromY), new Coordinate(toX, toY));
+            this.mouse.DragAndDrop(new Coordinate(fromX, fromY), new Coordinate(toX, toY), movementSpeed: MovementSpeed.Fast);
 
             var position = this.mouse.FindCursor();
             Assert.That(position.X, Is.EqualTo(toX));

@@ -26,6 +26,21 @@
 
     public static class MoveExtensions
     {
+        private static int TranslateMovementSpeedToPixelsPerSecond(MovementSpeed movement)
+        {
+            switch (movement)
+            {
+                case MovementSpeed.Slow:
+                    return 200;
+                case MovementSpeed.Medium:
+                    return 400;
+                case MovementSpeed.Fast:
+                    return 800;
+                default:
+                    return 400;
+            }
+        }
+
         public static void MoveTo(this IMouse mouse, Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant, Coordinate offset = null)
         {
             var targetWithOffset = target + offset;
@@ -45,7 +60,7 @@
             var distance = Hypotenuse(dX, dY);
 
             //calculate number of steps needed to perform the move operation
-            var pixelsPerSecond = 100;
+            var pixelsPerSecond = TranslateMovementSpeedToPixelsPerSecond(movementSpeed);
             var sectionMovementDuration = 10;
             var steps = CalculateNumberOfMovementSteps(pixelsPerSecond, sectionMovementDuration, distance);
 
@@ -106,11 +121,11 @@
 
     public static class DragExtensions
     {
-        public static void DragAndDrop(this IMouse mouse, Coordinate origin, Coordinate target, Coordinate offset = null)
+        public static void DragAndDrop(this IMouse mouse, Coordinate origin, Coordinate target, Coordinate offset = null, MovementSpeed movementSpeed = MovementSpeed.Medium)
         {
             mouse.PositionCursor(origin + offset);
             mouse.LeftDown();
-            mouse.MoveTo(target, MovementSpeed.Medium, offset: offset);
+            mouse.MoveTo(target, movementSpeed, offset: offset);
             mouse.LeftUp();
         }
     }

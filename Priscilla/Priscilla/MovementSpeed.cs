@@ -3,6 +3,8 @@
     public enum MovementSpeed
     {
         Instant, 
-        Medium
+        Slow,
+        Medium,
+        Fast
     }
 }
