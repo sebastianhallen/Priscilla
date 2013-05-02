@@ -18,13 +18,10 @@ mouse.LeftDown();
 mouse.LeftUp();
 
 
-
-
 //Higher level actions are available as extensions in Priscilla.Extension
 
 //move the cursor 
-var offset = new Coordinate(20, 20);
-mouse.MoveTo(new Coordinate(200, 200), MovementSpeed.Medium, offset);
+mouse.MoveTo(new Coordinate(200, 200), MovementSpeed.Medium);
 mouse.MoveTo(new Coordinate(300, 300), MovementSpeed.Instant);
 mouse.MoveTo(new Coordinate(100, 100));
 
