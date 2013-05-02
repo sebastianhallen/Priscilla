@@ -1,5 +1,7 @@
 ﻿namespace Priscilla
 {
+    using System.Drawing;
+
     public class Coordinate
     {
         public int Y;
@@ -53,6 +55,11 @@
         {
             if (other == null) return false;
             return this.X.Equals(other.X) && this.Y.Equals(other.Y);
+        }
+
+        public static implicit operator Point(Coordinate coordinate)
+        {
+            return new Point(coordinate.X, coordinate.Y);
         }
     }
 }
