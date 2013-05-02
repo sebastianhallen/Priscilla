@@ -41,13 +41,11 @@
             }
         }
 
-        public static void MoveTo(this IMouse mouse, Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant, Coordinate offset = null)
-        {
-            var targetWithOffset = target + offset;
-
+        public static void MoveTo(this IMouse mouse, Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant)
+        {            
             if (MovementSpeed.Instant.Equals(movementSpeed))
             {
-                mouse.PositionCursor(targetWithOffset);
+                mouse.PositionCursor(target);
                 return;
             }
 
@@ -55,8 +53,8 @@
             var startPosition = mouse.FindCursor();
             var startX = Convert.ToDouble(startPosition.X);
             var startY = Convert.ToDouble(startPosition.Y);
-            var dX = Convert.ToDouble(targetWithOffset.X) - startX;
-            var dY = Convert.ToDouble(targetWithOffset.Y) - startY;
+            var dX = Convert.ToDouble(target.X) - startX;
+            var dY = Convert.ToDouble(target.Y) - startY;
             var distance = Hypotenuse(dX, dY);
 
             //calculate number of steps needed to perform the move operation
@@ -90,11 +88,11 @@
 
             //verify that we are not too far off from the target position
             var endPosition = mouse.FindCursor();
-            var distanceFromWantedPosition = (int)CalculateDistance(targetWithOffset, endPosition);
+            var distanceFromWantedPosition = (int)CalculateDistance(target, endPosition);
             System.Diagnostics.Debug.Assert(!(Math.Abs(distanceFromWantedPosition) > 5), string.Format("end distance is {0} pixels off", distanceFromWantedPosition));
 
             //adjusting for rounding errors
-            mouse.PositionCursor(new Coordinate(targetWithOffset.X, targetWithOffset.Y));
+            mouse.PositionCursor(new Coordinate(target.X, target.Y));
         }
 
         private static double CalculateDistance(Coordinate a, Coordinate b)
@@ -121,11 +119,11 @@
 
     public static class DragExtensions
     {
-        public static void DragAndDrop(this IMouse mouse, Coordinate origin, Coordinate target, Coordinate offset = null, MovementSpeed movementSpeed = MovementSpeed.Medium)
+        public static void DragAndDrop(this IMouse mouse, Coordinate origin, Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Medium)
         {
-            mouse.PositionCursor(origin + offset);
+            mouse.PositionCursor(origin);
             mouse.LeftDown();
-            mouse.MoveTo(target, movementSpeed, offset: offset);
+            mouse.MoveTo(target, movementSpeed);
             mouse.LeftUp();
         }
     }
