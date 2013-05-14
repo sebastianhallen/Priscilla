@@ -3,9 +3,8 @@
     using System;
     using NUnit.Framework;
 
-
     // these tests require google chrome to be running
-    [TestFixture]
+    [TestFixture, Explicit]
     public class ApplicationWindowFinderIntegrationTests
     {
         private IApplicationWindowFinder windowFinder;
