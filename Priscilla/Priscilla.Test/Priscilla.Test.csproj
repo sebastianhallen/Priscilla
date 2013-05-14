@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationWindowFinderIntegrationTests.cs" />
     <Compile Include="CoordinateEqualityTests.cs" />
     <Compile Include="CoordinateGetHashTests.cs" />
     <Compile Include="CoordinateMergingTests.cs" />
