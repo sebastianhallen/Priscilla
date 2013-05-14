@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationWindowFinder.cs" />
     <Compile Include="Coordinate.cs" />
     <Compile Include="Extension\Priscilla.cs" />
+    <Compile Include="IApplicationWindowFinder.cs" />
     <Compile Include="IMouse.cs" />
     <Compile Include="Mouse.cs" />
     <Compile Include="MovementSpeed.cs" />
