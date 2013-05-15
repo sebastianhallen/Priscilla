@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="ApplicationWindowFinder.cs" />
     <Compile Include="Coordinate.cs" />
+    <Compile Include="CursorCoordinate.cs" />
     <Compile Include="Extension\Priscilla.cs" />
     <Compile Include="IApplicationWindowFinder.cs" />
     <Compile Include="IMouse.cs" />

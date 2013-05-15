@@ -63,19 +63,7 @@
         private static extern bool GetCursorPos(out CursorCoordinate point);
 
         [DllImport("user32.dll")]
-        private static extern bool SetCursorPos(int x, int y);        
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct CursorCoordinate
-        {
-            public int X;
-            public int Y;
-
-            public static implicit operator Coordinate(CursorCoordinate coordinate)
-            {
-                return new Coordinate(coordinate.X, coordinate.Y);
-            }
-        }
+        private static extern bool SetCursorPos(int x, int y);
 
         private static class MouseInput
         {
