@@ -51,6 +51,7 @@
     <Compile Include="MovementSpeed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowBoundMouse.cs" />
+    <Compile Include="WindowRelativeMouse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
