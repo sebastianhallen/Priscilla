@@ -4,15 +4,41 @@
     using NUnit.Framework;
     using Priscilla.Extension;
 
+    [TestFixture, Explicit]
+    public class WindowRelativePriscillaIntegrationTests
+        : PriscillaIntegrationsTests
+    {
+        protected override IMouse CreateMouse()
+        {
+            IApplicationWindowFinder windowFinder = new ApplicationWindowFinder();
+            var chromehWnd = windowFinder.FindWindow("Chrome_WidgetWin_1");
+            var innerhWnd = windowFinder.FindWindow(chromehWnd, "Chrome_WidgetWin_0");
+            var viewporthWnd = windowFinder.FindWindow(innerhWnd, "Chrome_RenderWidgetHostHWND");
+
+            return new WindowRelativeMouse(viewporthWnd);
+        }
+    }
+
     [TestFixture]
-    public class PriscillaIntegrationsTests
+    public class DefaultPriscillaIntegrationTests
+        : PriscillaIntegrationsTests
+    {
+        protected override IMouse CreateMouse()
+        {
+            return new Mouse();
+        }
+    }
+    
+    public abstract class PriscillaIntegrationsTests
     {
         private IMouse mouse;
+
+        protected abstract IMouse CreateMouse();
 
         [SetUp]
         public void Before()
         {
-            this.mouse = A.Fake<IMouse>(wrapped => wrapped.Wrapping(new Mouse()));
+            this.mouse = A.Fake<IMouse>(wrapped => wrapped.Wrapping(this.CreateMouse()));
             A.CallTo(() => this.mouse.LeftDown()).Invokes(_ => { });
         }
 
