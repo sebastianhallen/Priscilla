@@ -11,11 +11,10 @@
         protected override IMouse CreateMouse()
         {
             IApplicationWindowFinder windowFinder = new ApplicationWindowFinder();
-            var chromehWnd = windowFinder.FindWindow("Chrome_WidgetWin_1");
-            var innerhWnd = windowFinder.FindWindow(chromehWnd, "Chrome_WidgetWin_0");
-            var viewporthWnd = windowFinder.FindWindow(innerhWnd, "Chrome_RenderWidgetHostHWND");
-
-            return new WindowRelativeMouse(viewporthWnd);
+            
+            return new WindowRelativeMouse(windowFinder.FindWindow("Chrome_WidgetWin_1")
+                                                       .FindChildWindow("Chrome_WidgetWin_0")
+                                                       .FindChildWindow("Chrome_RenderWidgetHostHWND"));
         }
     }
 

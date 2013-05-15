@@ -34,20 +34,15 @@
         [Test]
         public void Should_return_zero_pointer_when_trying_to_find_non_existing_child_window()
         {
-            var parenthWnd = this.windowFinder.FindWindow("Chrome_WidgetWin_1");
+            var hWnd = this.windowFinder.FindWindow("Chrome_WidgetWin_1").FindChildWindow("meh");
 
-            var childhWnd = this.windowFinder.FindWindow(parenthWnd, "meh");
-
-            Assert.That(childhWnd, Is.EqualTo(IntPtr.Zero));
+            Assert.That(hWnd, Is.EqualTo(IntPtr.Zero));
         }
 
         [Test]
         public void Should_be_able_to_find_viewport_in_a_google_chrome_browser_window()
         {
-            var chromehWnd = this.windowFinder.FindWindow("Chrome_WidgetWin_1");
-
-            var innerhWnd = this.windowFinder.FindWindow(chromehWnd, "Chrome_WidgetWin_0");
-            var viewporthWnd = this.windowFinder.FindWindow(innerhWnd, "Chrome_RenderWidgetHostHWND");
+            var viewporthWnd = this.windowFinder.FindWindow("Chrome_WidgetWin_1").FindChildWindow("Chrome_WidgetWin_0").FindChildWindow("Chrome_RenderWidgetHostHWND");
 
             Assert.That(viewporthWnd, Is.Not.EqualTo(IntPtr.Zero));
         }
