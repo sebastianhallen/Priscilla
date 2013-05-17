@@ -8,13 +8,13 @@
     {
         public void PositionCursor(Coordinate coordinate)
         {
-            SetCursorPos(coordinate.X, coordinate.Y);
+            NativeMethods.SetCursorPos(coordinate.X, coordinate.Y);
         }
 
         public Coordinate FindCursor()
         {
             CursorCoordinate position;
-            if (GetCursorPos(out position))
+            if (NativeMethods.GetCursorPos(out position))
             {
                 return position;
             }
@@ -23,47 +23,38 @@
 
         public void MoveCursor(int dx, int dy)
         {
-            mouse_event(MouseInput.Move, (uint)dy, (uint)dx, 0, new IntPtr());
+            NativeMethods.mouse_event(MouseInput.Move, (uint)dy, (uint)dx, 0, new IntPtr());
         }
 
         public void LeftDown()
         {
-            mouse_event(MouseInput.LeftDown, 0, 0, 0, new IntPtr());
+            NativeMethods.mouse_event(MouseInput.LeftDown, 0, 0, 0, new IntPtr());
         }
 
         public void LeftUp()
         {
-            mouse_event(MouseInput.LeftUp, 0, 0, 0, new IntPtr());
+            NativeMethods.mouse_event(MouseInput.LeftUp, 0, 0, 0, new IntPtr());
         }
 
         public void RightDown()
         {
-            mouse_event(MouseInput.RightDown, 0, 0, 0, new IntPtr());
+            NativeMethods.mouse_event(MouseInput.RightDown, 0, 0, 0, new IntPtr());
         }
 
         public void RightUp()
         {
-            mouse_event(MouseInput.RightUp, 0, 0, 0, new IntPtr());
+            NativeMethods.mouse_event(MouseInput.RightUp, 0, 0, 0, new IntPtr());
         }
 
         public void MiddleDown()
         {
-            mouse_event(MouseInput.MiddleDown, 0, 0, 0, new IntPtr());
+            NativeMethods.mouse_event(MouseInput.MiddleDown, 0, 0, 0, new IntPtr());
         }
 
         public void MiddleUp()
         {
-            mouse_event(MouseInput.MiddleUp, 0, 0, 0, new IntPtr());
+            NativeMethods.mouse_event(MouseInput.MiddleUp, 0, 0, 0, new IntPtr());
         }
-
-        [DllImport("user32.dll")]
-        private static extern void mouse_event(UInt32 dwFlags, UInt32 dy, UInt32 dx, UInt32 dwData, IntPtr dwExtraInfo);
-       
-        [DllImport("user32.dll")]
-        private static extern bool GetCursorPos(out CursorCoordinate point);
-
-        [DllImport("user32.dll")]
-        private static extern bool SetCursorPos(int x, int y);
 
         private static class MouseInput
         {

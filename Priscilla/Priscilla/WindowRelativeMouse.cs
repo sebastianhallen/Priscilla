@@ -19,7 +19,7 @@
         public void PositionCursor(Coordinate coordinate)
         {
             var screenCoordinate = new CursorCoordinate();
-            ClientToScreen(this.hWnd, ref screenCoordinate);
+            NativeMethods.ClientToScreen(this.hWnd, ref screenCoordinate);
 
             this.absoluteMouse.PositionCursor(coordinate + screenCoordinate);
         }
@@ -27,7 +27,8 @@
         public Coordinate FindCursor()
         {            
             var screenCoordinate = new CursorCoordinate();
-            ClientToScreen(this.hWnd, ref screenCoordinate);
+            NativeMethods.ClientToScreen(this.hWnd, ref screenCoordinate);
+
             var position = this.absoluteMouse.FindCursor();
             return position - screenCoordinate;
         }
@@ -67,7 +68,5 @@
             this.absoluteMouse.MiddleUp();
         }
 
-        [DllImport("user32.dll")]
-        static extern bool ClientToScreen(IntPtr hWnd, ref CursorCoordinate lpPoint);
     }
 }
