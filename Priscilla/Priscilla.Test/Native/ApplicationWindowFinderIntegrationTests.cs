@@ -1,4 +1,4 @@
-﻿namespace Priscilla.Test
+﻿namespace Priscilla.Test.Native
 {
     using System;
     using NUnit.Framework;
