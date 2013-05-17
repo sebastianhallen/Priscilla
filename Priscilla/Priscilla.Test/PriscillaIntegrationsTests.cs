@@ -3,6 +3,23 @@
     using FakeItEasy;
     using NUnit.Framework;
     using Priscilla.Extension;
+    using Priscilla.Native;
+
+    [TestFixture, Explicit]
+    public class WindowBoundPriscillaIntegrationTests
+        : PriscillaIntegrationsTests
+    {
+        protected override IMouse CreateMouse()
+        {
+            IApplicationWindowFinder windowFinder = new ApplicationWindowFinder();
+
+            var viewport = windowFinder.FindWindow("Chrome_WidgetWin_1")
+                                       .FindChildWindow("Chrome_WidgetWin_0")
+                                       .FindChildWindow("Chrome_RenderWidgetHostHWND");
+
+            return new WindowBoundMouse(viewport);
+        }
+    }
 
     [TestFixture, Explicit]
     public class WindowRelativePriscillaIntegrationTests
@@ -11,10 +28,11 @@
         protected override IMouse CreateMouse()
         {
             IApplicationWindowFinder windowFinder = new ApplicationWindowFinder();
-            
-            return new WindowRelativeMouse(windowFinder.FindWindow("Chrome_WidgetWin_1")
-                                                       .FindChildWindow("Chrome_WidgetWin_0")
-                                                       .FindChildWindow("Chrome_RenderWidgetHostHWND"));
+            var viewport = windowFinder.FindWindow("Chrome_WidgetWin_1")
+                                       .FindChildWindow("Chrome_WidgetWin_0")
+                                       .FindChildWindow("Chrome_RenderWidgetHostHWND");
+
+            return new WindowRelativeMouse(viewport, new Mouse());
         }
     }
 

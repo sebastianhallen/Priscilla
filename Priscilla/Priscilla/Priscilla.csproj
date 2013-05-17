@@ -41,15 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationWindowFinder.cs" />
+    <Compile Include="Native\ApplicationWindowFinder.cs" />
     <Compile Include="Coordinate.cs" />
     <Compile Include="CursorCoordinate.cs" />
     <Compile Include="Extension\Priscilla.cs" />
-    <Compile Include="IApplicationWindowFinder.cs" />
+    <Compile Include="Native\FluentApplicationWindowFinder.cs" />
+    <Compile Include="Native\IApplicationWindowFinder.cs" />
     <Compile Include="IMouse.cs" />
+    <Compile Include="Native\INativeMethodWrapper.cs" />
     <Compile Include="Mouse.cs" />
     <Compile Include="MovementSpeed.cs" />
-    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Native\NativeMethods.cs" />
+    <Compile Include="Native\NativeMethodWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowBoundMouse.cs" />
     <Compile Include="WindowRelativeMouse.cs" />

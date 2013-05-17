@@ -1,4 +1,4 @@
-﻿namespace Priscilla
+﻿namespace Priscilla.Native
 {
     using System;
 

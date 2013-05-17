@@ -1,4 +1,4 @@
-﻿namespace Priscilla
+﻿namespace Priscilla.Native
 {
     using System;
     using System.Runtime.InteropServices;
@@ -7,6 +7,12 @@
     {
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode, ThrowOnUnmappableChar = true)]
         public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
+
+        [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
         public static extern bool ClientToScreen(IntPtr hWnd, ref CursorCoordinate lpPoint);
