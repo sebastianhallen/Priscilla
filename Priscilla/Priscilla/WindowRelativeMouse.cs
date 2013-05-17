@@ -1,18 +1,18 @@
 ﻿namespace Priscilla
 {
     using System;
-    using System.Runtime.InteropServices;
+    using Priscilla.Native;
 
     public class WindowRelativeMouse
         : IMouse
     {
         private readonly IntPtr hWnd;
-        private readonly Mouse absoluteMouse;
+        private readonly IMouse absoluteMouse;
 
-        public WindowRelativeMouse(IntPtr hWnd)
+        public WindowRelativeMouse(IntPtr hWnd, IMouse mouse)
         {
             this.hWnd = hWnd;
-            this.absoluteMouse = new Mouse();
+            this.absoluteMouse = mouse;
         }
 
 

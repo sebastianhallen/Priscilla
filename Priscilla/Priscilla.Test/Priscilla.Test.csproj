@@ -60,6 +60,7 @@
     <Compile Include="CoordinateTests.cs" />
     <Compile Include="PriscillaIntegrationsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WindowRelativeMouseTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

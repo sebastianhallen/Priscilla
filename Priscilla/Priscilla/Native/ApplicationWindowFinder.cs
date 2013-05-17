@@ -1,4 +1,4 @@
-﻿namespace Priscilla
+﻿namespace Priscilla.Native
 {
     using System;
 
@@ -13,14 +13,6 @@
         public IntPtr FindChildWindow(IntPtr hwndParent, string windowClass, string windowTitle)
         {
             return NativeMethods.FindWindowEx(hwndParent, IntPtr.Zero, windowClass, windowTitle);
-        }
-    }
-
-    public static class FluentApplicationWindowFinder
-    {
-        public static IntPtr FindChildWindow(this IntPtr hwndParent, string windowClass, string windowTitle = null)
-        {
-            return new ApplicationWindowFinder().FindChildWindow(hwndParent, windowClass, windowTitle);
         }
     }
 }

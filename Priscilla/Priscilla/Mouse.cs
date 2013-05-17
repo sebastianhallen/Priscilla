@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.InteropServices;
+    using Priscilla.Native;
 
     public class Mouse
         : IMouse

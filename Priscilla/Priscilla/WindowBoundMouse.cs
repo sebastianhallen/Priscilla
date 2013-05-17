@@ -1,6 +1,7 @@
 ﻿namespace Priscilla
 {
     using System;
+    using Priscilla.Native;
 
 
     /// <summary>

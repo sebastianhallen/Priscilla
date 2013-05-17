@@ -2,6 +2,7 @@
 {
     using System;
     using NUnit.Framework;
+    using Priscilla.Native;
 
     // these tests require google chrome to be running
     [TestFixture, Explicit]
