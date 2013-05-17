@@ -11,17 +11,24 @@
         : IMouse
     {
         private readonly IntPtr hWnd;
-        private readonly Mouse absoluteMouse;
+        private readonly INativeMethodWrapper nativeMethodWrapper;
+        private readonly IMouse absoluteMouse;
 
         public WindowBoundMouse(IntPtr hWnd)
+            : this(hWnd, new NativeMethodWrapper(), new Mouse())
+        {
+        }
+
+        internal WindowBoundMouse(IntPtr hWnd, INativeMethodWrapper nativeMethodWrapper, IMouse mouse)
         {
             this.hWnd = hWnd;
-            this.absoluteMouse = new Mouse();
+            this.nativeMethodWrapper = nativeMethodWrapper;
+            this.absoluteMouse = mouse;
         }
 
         public void PositionCursor(Coordinate coordinate)
         {
-            NativeMethods.SendMessage(this.hWnd, MouseInput.Move, IntPtr.Zero, new IntPtr(coordinate.Y << 16 | coordinate.X));
+            this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.Move, IntPtr.Zero, new IntPtr(coordinate.Y << 16 | coordinate.X));
         }
 
         public Coordinate FindCursor()
@@ -31,37 +38,37 @@
 
         public void MoveCursor(int dx, int dy)
         {
-            NativeMethods.SendMessage(this.hWnd, MouseInput.Move, IntPtr.Zero, new IntPtr(dy << 16 | dx));
+            this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.Move, IntPtr.Zero, new IntPtr(dy << 16 | dx));
         }
 
         public void LeftDown()
         {
-            NativeMethods.SendMessage(this.hWnd, MouseInput.LeftDown, MouseButton.Left, IntPtr.Zero);
+            this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.LeftDown, MouseButton.Left, IntPtr.Zero);
         }
 
         public void LeftUp()
         {
-            NativeMethods.SendMessage(this.hWnd, MouseInput.LeftUp, MouseButton.Left, IntPtr.Zero);
+            this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.LeftUp, MouseButton.Left, IntPtr.Zero);
         }
 
         public void RightDown()
         {
-            NativeMethods.SendMessage(this.hWnd, MouseInput.RightDown, MouseButton.Right, IntPtr.Zero);
+            this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.RightDown, MouseButton.Right, IntPtr.Zero);
         }
 
         public void RightUp()
         {
-            NativeMethods.SendMessage(this.hWnd, MouseInput.RightUp, MouseButton.Right, IntPtr.Zero);
+            this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.RightUp, MouseButton.Right, IntPtr.Zero);
         }
 
         public void MiddleDown()
         {
-            NativeMethods.SendMessage(this.hWnd, MouseInput.MiddleDown, MouseButton.Middle, IntPtr.Zero);
+            this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.MiddleDown, MouseButton.Middle, IntPtr.Zero);
         }
 
         public void MiddleUp()
         {
-            NativeMethods.SendMessage(this.hWnd, MouseInput.MiddleUp, MouseButton.Middle, IntPtr.Zero);
+            this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.MiddleUp, MouseButton.Middle, IntPtr.Zero);
         }
 
         private static class MouseButton

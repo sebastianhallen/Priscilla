@@ -1,21 +1,32 @@
 ﻿namespace Priscilla
 {
     using System;
-    using System.Runtime.InteropServices;
     using Priscilla.Native;
 
     public class Mouse
         : IMouse
     {
+        private readonly INativeMethodWrapper nativeMethodWrapper;
+
+        public Mouse()
+            : this(new NativeMethodWrapper())
+        {
+        }
+
+        private Mouse(INativeMethodWrapper nativeMethodWrapper)
+        {
+            this.nativeMethodWrapper = nativeMethodWrapper;
+        }
+
         public void PositionCursor(Coordinate coordinate)
         {
-            NativeMethods.SetCursorPos(coordinate.X, coordinate.Y);
+            this.nativeMethodWrapper.SetCursorPos(coordinate.X, coordinate.Y);
         }
 
         public Coordinate FindCursor()
         {
             CursorCoordinate position;
-            if (NativeMethods.GetCursorPos(out position))
+            if (this.nativeMethodWrapper.GetCursorPos(out position))
             {
                 return position;
             }
@@ -24,37 +35,37 @@
 
         public void MoveCursor(int dx, int dy)
         {
-            NativeMethods.mouse_event(MouseInput.Move, (uint)dy, (uint)dx, 0, new IntPtr());
+            this.nativeMethodWrapper.mouse_event(MouseInput.Move, (uint)dy, (uint)dx, 0, new IntPtr());
         }
 
         public void LeftDown()
         {
-            NativeMethods.mouse_event(MouseInput.LeftDown, 0, 0, 0, new IntPtr());
+            this.nativeMethodWrapper.mouse_event(MouseInput.LeftDown, 0, 0, 0, new IntPtr());
         }
 
         public void LeftUp()
         {
-            NativeMethods.mouse_event(MouseInput.LeftUp, 0, 0, 0, new IntPtr());
+            this.nativeMethodWrapper.mouse_event(MouseInput.LeftUp, 0, 0, 0, new IntPtr());
         }
 
         public void RightDown()
         {
-            NativeMethods.mouse_event(MouseInput.RightDown, 0, 0, 0, new IntPtr());
+            this.nativeMethodWrapper.mouse_event(MouseInput.RightDown, 0, 0, 0, new IntPtr());
         }
 
         public void RightUp()
         {
-            NativeMethods.mouse_event(MouseInput.RightUp, 0, 0, 0, new IntPtr());
+            this.nativeMethodWrapper.mouse_event(MouseInput.RightUp, 0, 0, 0, new IntPtr());
         }
 
         public void MiddleDown()
         {
-            NativeMethods.mouse_event(MouseInput.MiddleDown, 0, 0, 0, new IntPtr());
+            this.nativeMethodWrapper.mouse_event(MouseInput.MiddleDown, 0, 0, 0, new IntPtr());
         }
 
         public void MiddleUp()
         {
-            NativeMethods.mouse_event(MouseInput.MiddleUp, 0, 0, 0, new IntPtr());
+            this.nativeMethodWrapper.mouse_event(MouseInput.MiddleUp, 0, 0, 0, new IntPtr());
         }
 
         private static class MouseInput

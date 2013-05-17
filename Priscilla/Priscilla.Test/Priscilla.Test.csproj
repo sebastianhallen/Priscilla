@@ -53,11 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationWindowFinderIntegrationTests.cs" />
+    <Compile Include="Native\ApplicationWindowFinderIntegrationTests.cs" />
     <Compile Include="CoordinateEqualityTests.cs" />
     <Compile Include="CoordinateGetHashTests.cs" />
     <Compile Include="CoordinateMergingTests.cs" />
     <Compile Include="CoordinateTests.cs" />
+    <Compile Include="Native\ApplicationWindowFinderTests.cs" />
     <Compile Include="PriscillaIntegrationsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowRelativeMouseTests.cs" />
