@@ -49,6 +49,7 @@
     <Compile Include="IMouse.cs" />
     <Compile Include="Mouse.cs" />
     <Compile Include="MovementSpeed.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowBoundMouse.cs" />
     <Compile Include="WindowRelativeMouse.cs" />
