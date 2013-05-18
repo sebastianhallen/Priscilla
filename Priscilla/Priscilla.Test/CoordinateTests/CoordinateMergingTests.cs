@@ -1,6 +1,7 @@
-﻿namespace Priscilla.Test
+﻿namespace Priscilla.Test.CoordinateTests
 {
     using NUnit.Framework;
+    using Priscilla;
 
     [TestFixture]
     public class CoordinateMergingTests

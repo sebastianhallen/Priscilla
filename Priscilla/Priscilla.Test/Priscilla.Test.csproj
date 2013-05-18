@@ -53,11 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MouseTest.cs" />
     <Compile Include="Native\ApplicationWindowFinderIntegrationTests.cs" />
-    <Compile Include="CoordinateEqualityTests.cs" />
-    <Compile Include="CoordinateGetHashTests.cs" />
-    <Compile Include="CoordinateMergingTests.cs" />
-    <Compile Include="CoordinateTests.cs" />
+    <Compile Include="CoordinateTests\CoordinateEqualityTests.cs" />
+    <Compile Include="CoordinateTests\CoordinateGetHashTests.cs" />
+    <Compile Include="CoordinateTests\CoordinateMergingTests.cs" />
+    <Compile Include="CoordinateTests\CoordinateTests.cs" />
     <Compile Include="Native\ApplicationWindowFinderTests.cs" />
     <Compile Include="PriscillaIntegrationsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -72,6 +73,7 @@
       <Name>Priscilla</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

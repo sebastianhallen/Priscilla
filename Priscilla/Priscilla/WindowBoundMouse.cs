@@ -7,7 +7,7 @@
     /// <summary>
     /// use absolute coordinates within a window
     /// </summary>
-    public class WindowBoundMouse
+    internal class WindowBoundMouse
         : IMouse
     {
         private readonly IntPtr hWnd;

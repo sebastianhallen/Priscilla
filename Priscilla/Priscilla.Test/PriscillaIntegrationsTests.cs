@@ -2,6 +2,7 @@
 {
     using FakeItEasy;
     using NUnit.Framework;
+    using Priscilla;
     using Priscilla.Extension;
     using Priscilla.Native;
 
