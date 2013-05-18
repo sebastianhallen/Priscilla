@@ -46,31 +46,43 @@
 
         public void LeftDown()
         {
+            this.nativeMethodWrapper.SetForegroundWindow(this.hWnd);
+
             this.absoluteMouse.LeftDown();
         }
 
         public void LeftUp()
         {
+            this.nativeMethodWrapper.SetForegroundWindow(this.hWnd);
+
             this.absoluteMouse.LeftUp();
         }
 
         public void RightDown()
         {
+            this.nativeMethodWrapper.SetForegroundWindow(this.hWnd);
+
             this.absoluteMouse.RightDown();
         }
 
         public void RightUp()
         {
+            this.nativeMethodWrapper.SetForegroundWindow(this.hWnd);
+
             this.absoluteMouse.RightUp();
         }
 
         public void MiddleDown()
         {
+            this.nativeMethodWrapper.SetForegroundWindow(this.hWnd);
+
             this.absoluteMouse.MiddleDown();
         }
 
         public void MiddleUp()
         {
+            this.nativeMethodWrapper.SetForegroundWindow(this.hWnd);
+
             this.absoluteMouse.MiddleUp();
         }
 
