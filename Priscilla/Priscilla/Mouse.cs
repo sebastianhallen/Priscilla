@@ -13,7 +13,7 @@
         {
         }
 
-        private Mouse(INativeMethodWrapper nativeMethodWrapper)
+        internal Mouse(INativeMethodWrapper nativeMethodWrapper)
         {
             this.nativeMethodWrapper = nativeMethodWrapper;
         }
@@ -68,7 +68,7 @@
             this.nativeMethodWrapper.mouse_event(MouseInput.MiddleUp, 0, 0, 0, new IntPtr());
         }
 
-        private static class MouseInput
+        internal static class MouseInput
         {
             public const uint Absolute = 0x8000;        //The dx and dy parameters contain normalized absolute coordinates. If not set, those parameters contain relative data
             public const uint VirtualDesktop = 0x4000;  //Maps coordinates to the entire desktop. Must be used with MouseInput.Absolute. 

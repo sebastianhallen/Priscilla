@@ -1,8 +1,9 @@
-﻿namespace Priscilla.Test
+﻿namespace Priscilla.Test.CoordinateTests
 {
     using System;
     using System.Drawing;
     using NUnit.Framework;
+    using Priscilla;
 
     [TestFixture]
     public class CoordinateTests
