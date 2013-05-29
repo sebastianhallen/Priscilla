@@ -20,6 +20,16 @@
             return NativeMethods.GetForegroundWindow();
         }
 
+        public IntPtr SetActiveWindow(IntPtr hWnd)
+        {
+            return NativeMethods.SetActiveWindow(hWnd);
+        }
+
+        public bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags)
+        {
+            return NativeMethods.SetWindowPos(hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
+        }
+
         public bool ClientToScreen(IntPtr hWnd, ref CursorCoordinate lpPoint)
         {
             return NativeMethods.ClientToScreen(hWnd, ref lpPoint);

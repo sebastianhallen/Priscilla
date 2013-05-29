@@ -6,7 +6,7 @@
     using Priscilla.Extension;
     using Priscilla.Native;
 
-    [TestFixture, Explicit]
+    [TestFixture, Ignore]
     public class WindowBoundPriscillaIntegrationTests
         : PriscillaIntegrationsTests
     {
@@ -29,11 +29,12 @@
         protected override IMouse CreateMouse()
         {
             IApplicationWindowFinder windowFinder = new ApplicationWindowFinder();
-            var viewport = windowFinder.FindWindow("Chrome_WidgetWin_1")
-                                       .FindChildWindow("Chrome_WidgetWin_0")
-                                       .FindChildWindow("Chrome_RenderWidgetHostHWND");
+            var mainWindow = windowFinder.FindWindow("Chrome_WidgetWin_1", "about:blank - Google Chrome");
+            var viewport = mainWindow
+                            .FindChildWindow("Chrome_WidgetWin_0")
+                            .FindChildWindow("Chrome_RenderWidgetHostHWND");
 
-            return new WindowRelativeMouse(viewport, new Mouse());
+            return new WindowRelativeMouse(mainWindow, viewport, new Mouse());
         }
     }
 
