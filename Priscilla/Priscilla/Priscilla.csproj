@@ -53,7 +53,14 @@
     <Compile Include="MovementSpeed.cs" />
     <Compile Include="Native\NativeMethods.cs" />
     <Compile Include="Native\NativeMethodWrapper.cs" />
+    <Compile Include="Native\SetWIndowPosFlags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Retry\IRetrier.cs" />
+    <Compile Include="Utils\Retry\IRetryTimer.cs" />
+    <Compile Include="Utils\Retry\IRetryTimerFactory.cs" />
+    <Compile Include="Utils\Retry\Retrier.cs" />
+    <Compile Include="Utils\Retry\RetryTimer.cs" />
+    <Compile Include="Utils\Retry\RetryTimerFactory.cs" />
     <Compile Include="WindowBoundMouse.cs" />
     <Compile Include="WindowRelativeMouse.cs" />
   </ItemGroup>

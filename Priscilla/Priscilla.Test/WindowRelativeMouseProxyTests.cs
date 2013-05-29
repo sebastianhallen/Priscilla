@@ -7,12 +7,18 @@
     internal class WindowRelativeMouseProxyTests
         : WindowRelativeMouseTests
     {
+        [SetUp]
+        public void Before()
+        {
+            A.CallTo(() => this.nativeMethodWrapper.GetForegroundWindow()).Returns(this.hWnd);
+        }
+
         [Test]
         public void LeftDown_should_proxy_inner_mouse()
         {
             this.windowRelativeMouse.LeftDown();
 
-            A.CallTo(() => this.innerMouse.LeftDown()).MustHaveHappened();
+            A.CallTo(() => this.innerMouse.LeftDown()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
@@ -20,7 +26,7 @@
         {
             this.windowRelativeMouse.LeftUp();
 
-            A.CallTo(() => this.innerMouse.LeftUp()).MustHaveHappened();
+            A.CallTo(() => this.innerMouse.LeftUp()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
@@ -28,7 +34,7 @@
         {
             this.windowRelativeMouse.RightDown();
 
-            A.CallTo(() => this.innerMouse.RightDown()).MustHaveHappened();
+            A.CallTo(() => this.innerMouse.RightDown()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
@@ -36,7 +42,7 @@
         {
             this.windowRelativeMouse.RightUp();
 
-            A.CallTo(() => this.innerMouse.RightUp()).MustHaveHappened();
+            A.CallTo(() => this.innerMouse.RightUp()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
@@ -44,7 +50,7 @@
         {
             this.windowRelativeMouse.MiddleDown();
 
-            A.CallTo(() => this.innerMouse.MiddleDown()).MustHaveHappened();
+            A.CallTo(() => this.innerMouse.MiddleDown()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
@@ -52,7 +58,7 @@
         {
             this.windowRelativeMouse.MiddleUp();
 
-            A.CallTo(() => this.innerMouse.MiddleUp()).MustHaveHappened();
+            A.CallTo(() => this.innerMouse.MiddleUp()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
