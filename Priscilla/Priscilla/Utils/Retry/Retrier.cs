@@ -6,10 +6,11 @@
         : IRetrier, IDo, IDoFor
     {
         private readonly IRetryTimerFactory retryTimerFactory;
+
         private TimeSpan timeoutLimit;
         private Func<bool> until;
         private Action action;
-
+        
         public Retrier(IRetryTimerFactory retryTimerFactory)
         {
             this.retryTimerFactory = retryTimerFactory;
@@ -18,8 +19,10 @@
             this.action = () => System.Threading.Thread.Sleep(this.timeoutLimit);
         }
 
-        public void DoUntil(Action action, Func<bool> condition)
+        public void DoUntil(Action action, Func<bool> condition, TimeSpan? timeout)
         {
+            this.timeoutLimit = timeout.HasValue ? timeout.Value : this.timeoutLimit;
+            
             var timer = this.retryTimerFactory.Create(this.timeoutLimit);
 
             while (!condition() && !timer.TimedOut)
@@ -28,8 +31,10 @@
             }
         }
 
-        public void DontDoUntil(Action perform, Func<bool> whenFulfilled)
+        public void DontDoUntil(Action perform, Func<bool> whenFulfilled, TimeSpan? timeout)
         {
+            this.timeoutLimit = timeout.HasValue ? timeout.Value : this.timeoutLimit;
+            
             var timer = this.retryTimerFactory.Create(this.timeoutLimit);
             bool fulfilled;
             while (!(fulfilled = whenFulfilled()) && !timer.TimedOut)
@@ -47,10 +52,10 @@
         public void Until(Func<bool> until)
         {
             this.until = until;
-            this.DoUntil(this.action, this.until);
+            this.DoUntil(this.action, this.until, this.timeoutLimit);
         }
 
-        public IDoFor For(TimeSpan timeoutLimit)
+        public IDoFor ForNoLongerThan(TimeSpan timeoutLimit)
         {
             this.timeoutLimit = timeoutLimit;
             return this;

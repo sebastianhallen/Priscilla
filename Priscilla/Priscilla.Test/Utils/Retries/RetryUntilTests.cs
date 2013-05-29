@@ -24,7 +24,7 @@
         {
             var actionPerformed = false;
 
-            this.retrier.DoUntil(() => { actionPerformed = true; }, () => true);
+            this.retrier.DoUntil(() => { actionPerformed = true; }, () => true, TimeSpan.FromSeconds(1));
 
             Assert.That(actionPerformed, Is.False);
         }
@@ -35,7 +35,7 @@
             var actionPerformed = false;
             A.CallTo(() => this.retryTimer.TimedOut).ReturnsNextFromSequence(false, true);
 
-            this.retrier.DoUntil(() => { actionPerformed = true; }, () => false);
+            this.retrier.DoUntil(() => { actionPerformed = true; }, () => false, TimeSpan.FromSeconds(1));
 
             Assert.That(actionPerformed);
         }
@@ -46,7 +46,7 @@
             var actionPerformed = false;
             A.CallTo(() => this.retryTimer.TimedOut).ReturnsNextFromSequence(false, true);
 
-            this.retrier.DontDoUntil(() => { actionPerformed = true; }, () => false);
+            this.retrier.DontDoUntil(() => { actionPerformed = true; }, () => false, TimeSpan.FromSeconds(1));
 
             Assert.That(actionPerformed, Is.False);
         }
@@ -54,9 +54,9 @@
         [Test]
         public void DontDoUntil_should_perform_action_when_condition_is_satisfied()
         {
-            var actionPerformed = false;            
+            var actionPerformed = false;
 
-            this.retrier.DontDoUntil(() => { actionPerformed = true; }, () => true);
+            this.retrier.DontDoUntil(() => { actionPerformed = true; }, () => true, TimeSpan.FromSeconds(1));
 
             Assert.That(actionPerformed, Is.True);
         }
