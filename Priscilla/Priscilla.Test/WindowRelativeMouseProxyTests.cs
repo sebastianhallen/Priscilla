@@ -8,7 +8,7 @@
         : WindowRelativeMouseTests
     {
         [SetUp]
-        public void Before()
+        public void BeforeEach()
         {
             A.CallTo(() => this.nativeMethodWrapper.GetForegroundWindow()).Returns(this.hWnd);
         }
