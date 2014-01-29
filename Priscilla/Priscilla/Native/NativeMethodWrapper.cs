@@ -1,6 +1,7 @@
 ﻿namespace Priscilla.Native
 {
     using System;
+    using System.Text;
 
     internal class NativeMethodWrapper
         : INativeMethodWrapper
@@ -8,6 +9,23 @@
         public IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow)
         {
             return NativeMethods.FindWindowEx(hwndParent, hwndChildAfter, lpszClass, lpszWindow);
+        }
+
+        public bool EnumChildWindows(IntPtr hWndParent, Func<IntPtr, bool> lpEnumFunc)
+        {
+            var enumWindowsProcWrapper = new NativeMethods.EnumWindowsProc((IntPtr wnd, ref IntPtr _) => lpEnumFunc(wnd));
+            var lParam = IntPtr.Zero;
+            return NativeMethods.EnumChildWindows(hWndParent, enumWindowsProcWrapper, ref lParam);
+        }
+
+        public int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount)
+        {
+            return NativeMethods.GetClassName(hWnd, lpClassName, nMaxCount);
+        }
+
+        public int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount)
+        {
+            return NativeMethods.GetWindowText(hWnd, lpString, nMaxCount);
         }
 
         public bool SetForegroundWindow(IntPtr hWnd)

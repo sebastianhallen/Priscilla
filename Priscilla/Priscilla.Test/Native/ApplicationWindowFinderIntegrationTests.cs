@@ -43,9 +43,17 @@
         [Test]
         public void Should_be_able_to_find_viewport_in_a_google_chrome_browser_window()
         {
-            var viewporthWnd = this.windowFinder.FindWindow("Chrome_WidgetWin_1").FindChildWindow("Chrome_WidgetWin_0").FindChildWindow("Chrome_RenderWidgetHostHWND");
+            var viewporthWnd = this.windowFinder.FindWindow("Chrome_WidgetWin_1", ApplicationWindowFinder.Wildcard + " - Google Chrome").FindChildWindow("Static");
 
             Assert.That(viewporthWnd, Is.Not.EqualTo(IntPtr.Zero));
+        }
+
+        [Test]
+        public void Should_be_able_to_find_window_by_title_with_wildcard()
+        {
+            var chromehWnd = this.windowFinder.FindWindow("Chrome_WidgetWin_1", ApplicationWindowFinder.Wildcard + " - Google Chrome");
+
+            Assert.That(chromehWnd, Is.Not.EqualTo(IntPtr.Zero));
         }
     }
 }

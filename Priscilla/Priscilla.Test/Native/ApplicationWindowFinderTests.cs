@@ -1,6 +1,7 @@
 ﻿namespace Priscilla.Test.Native
 {
     using System;
+    using System.Text;
     using FakeItEasy;
     using NUnit.Framework;
     using Priscilla.Native;
@@ -34,6 +35,58 @@
             this.windowFinder.FindChildWindow(parent, "class", "title");
 
             A.CallTo(() => this.nativeMethodWrapper.FindWindowEx(parent, IntPtr.Zero, "class", "title")).MustHaveHappened();
+        }
+
+        [Test]
+        public void Should_return_exact_match_when_finding_window_with_title_containing_wildcard()
+        {
+            var hWnd = new IntPtr(1337);
+            A.CallTo(() => this.nativeMethodWrapper.FindWindowEx(IntPtr.Zero, IntPtr.Zero, "class", "some title " + ApplicationWindowFinder.Wildcard)).Returns(hWnd);
+
+            var result = this.windowFinder.FindWindow("class", "some title " + ApplicationWindowFinder.Wildcard);
+
+            Assert.That(result, Is.EqualTo(hWnd));
+        }
+
+        [Test]
+        public void Should_be_able_to_search_for_window_with_wildcard_title()
+        {
+            this.ExpectWindow("some class", "some title with a suffix");
+
+            var result = this.windowFinder.FindWindow("some class", ApplicationWindowFinder.Wildcard + "ome title" + ApplicationWindowFinder.Wildcard);
+
+            Assert.That(result.ToInt32(), Is.EqualTo(1337));
+        }
+
+        [Test]
+        public void Should_be_able_to_search_for_window_with_wildcard_class()
+        {
+            this.ExpectWindow("some class with suffix", "some title");
+
+            var result = this.windowFinder.FindWindow(ApplicationWindowFinder.Wildcard + "class" + ApplicationWindowFinder.Wildcard, "some title");
+
+            Assert.That(result.ToInt32(), Is.EqualTo(1337));
+        }
+
+        private void ExpectWindow(string windowClass, string windowCaption)
+        {
+            var _ = IntPtr.Zero;
+            A.CallTo(() => this.nativeMethodWrapper.GetClassName(A.Dummy<IntPtr>(), A.Dummy<StringBuilder>(), A.Dummy<int>()))
+             .WithAnyArguments()
+             .Invokes(fake => fake.Arguments.Get<StringBuilder>("lpClassName").Append(windowClass))
+             .Returns(0);
+            A.CallTo(() => this.nativeMethodWrapper.GetWindowText(A.Dummy<IntPtr>(), A.Dummy<StringBuilder>(), A.Dummy<int>()))
+             .WithAnyArguments()
+             .Invokes(fake => fake.Arguments.Get<StringBuilder>("lpString").Append(windowCaption))
+             .Returns(0);
+            A.CallTo(() => this.nativeMethodWrapper.EnumChildWindows(IntPtr.Zero, A<Func<IntPtr, bool>>._))
+             .WithAnyArguments()
+             .Invokes(fake =>
+             {
+                 var callback = fake.Arguments.Get<Func<IntPtr, bool>>(1);
+                 callback(new IntPtr(1337));
+             })
+             .Returns(true);
         }
     }
 }
