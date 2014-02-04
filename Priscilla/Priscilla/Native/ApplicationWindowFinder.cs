@@ -10,6 +10,7 @@
     {
         //public static readonly string Wildcard = "362BAD10-E489-4891-93CF-FF23671EE199}";
         public static readonly string Wildcard = "*";
+        public static bool UseCaseInsensitiveSearch { get; set; }
 
         private readonly INativeMethodWrapper nativeMethodWrapper;
 
@@ -66,7 +67,6 @@
             this.nativeMethodWrapper.GetClassName(hWnd, result, result.Capacity);
 
             var currentClass = result.ToString();
-            Console.WriteLine(currentClass);
             return IsWildcardMatch(windowClass, currentClass);
         }
 
@@ -90,7 +90,8 @@
             var patternParts = pattern.Split(new[] {Wildcard}, StringSplitOptions.RemoveEmptyEntries);
             var regexPattern = string.Join(".*", patternParts.Select(Regex.Escape));
 
-            return Regex.IsMatch(currentCaption, regexPattern);
+            var regexOptions = UseCaseInsensitiveSearch ? RegexOptions.IgnoreCase : RegexOptions.None;
+            return Regex.IsMatch(currentCaption, regexPattern, regexOptions);
         }
     }
 }

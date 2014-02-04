@@ -19,6 +19,12 @@
             this.windowFinder = new ApplicationWindowFinder(this.nativeMethodWrapper);
         }
 
+        [TearDown]
+        public void After()
+        {
+            ApplicationWindowFinder.UseCaseInsensitiveSearch = false;
+        }
+
         [Test]
         public void Should_delegate_find_window_call_to_native_method_wrapper_when_finding_root_window()
         {
@@ -66,6 +72,50 @@
             var result = this.windowFinder.FindWindow(ApplicationWindowFinder.Wildcard + "class" + ApplicationWindowFinder.Wildcard, "some title");
 
             Assert.That(result.ToInt32(), Is.EqualTo(1337));
+        }
+
+        [Test]
+        public void Should_find_window_with_matching_case_insensitive_class_when_case_insensitive_search_is_enabled()
+        {
+            this.ExpectWindow("some class with suffix", "some title");
+            ApplicationWindowFinder.UseCaseInsensitiveSearch = true;
+
+            var result = this.windowFinder.FindWindow(ApplicationWindowFinder.Wildcard + "CLASS" + ApplicationWindowFinder.Wildcard, "some title");
+
+            Assert.That(result.ToInt32(), Is.EqualTo(1337));
+        }
+
+        [Test]
+        public void Should_find_window_with_matching_case_insensitive_title_when_case_insensitive_search_is_enabled()
+        {
+            this.ExpectWindow("some class with suffix", "some title");
+            ApplicationWindowFinder.UseCaseInsensitiveSearch = true;
+
+            var result = this.windowFinder.FindWindow("some class with suffix", "soME TITle");
+
+            Assert.That(result.ToInt32(), Is.EqualTo(1337));
+        }
+
+        [Test]
+        public void Should_not_find_window_with_matching_case_insensitive_class_when_case_insensitive_search_is_disabled()
+        {
+            this.ExpectWindow("some class with suffix", "some title");
+            ApplicationWindowFinder.UseCaseInsensitiveSearch = false;
+
+            var result = this.windowFinder.FindWindow(ApplicationWindowFinder.Wildcard + "CLASS" + ApplicationWindowFinder.Wildcard, "some title");
+
+            Assert.That(result.ToInt32(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Should_not_find_window_with_matching_case_insensitive_title_when_case_insensitive_search_is_disabled()
+        {
+            this.ExpectWindow("some class with suffix", "some title");
+            ApplicationWindowFinder.UseCaseInsensitiveSearch = false;
+
+            var result = this.windowFinder.FindWindow("some class with suffix", "soME TITle");
+
+            Assert.That(result.ToInt32(), Is.EqualTo(0));
         }
 
         private void ExpectWindow(string windowClass, string windowCaption)
