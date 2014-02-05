@@ -72,5 +72,14 @@
         {
             return NativeMethods.SetCursorPos(x, y);
         }
+
+        public bool GetClientRect(IntPtr hWnd, out System.Drawing.Rectangle clientRect)
+        {
+            Area area;
+            var result = NativeMethods.GetClientRect(hWnd, out area);
+
+            clientRect = area;
+            return result;
+        }
     }
 }

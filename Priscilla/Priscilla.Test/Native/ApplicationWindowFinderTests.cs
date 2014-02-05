@@ -1,6 +1,7 @@
 ﻿namespace Priscilla.Test.Native
 {
     using System;
+    using System.Drawing;
     using System.Text;
     using FakeItEasy;
     using NUnit.Framework;
@@ -118,8 +119,38 @@
             Assert.That(result.ToInt32(), Is.EqualTo(0));
         }
 
-        private void ExpectWindow(string windowClass, string windowCaption)
+        [Test]
+        public void Should_be_able_to_get_window_client_area()
         {
+            var hWnd = new IntPtr(1337);
+            Rectangle _;
+            var expectedArea = new Rectangle(100, 200, 300, 400);
+            A.CallTo(() => this.nativeMethodWrapper.GetClientRect(hWnd, out _))
+                .Returns(true)
+                .AssignsOutAndRefParameters(expectedArea);
+
+            var area = this.windowFinder.GetClientArea(hWnd);
+
+            Assert.That(area, Is.EqualTo(expectedArea));
+        }
+
+        [Test]
+        public void Should_explode_when_failing_to_get_client_area()
+        {
+            Rectangle _;
+            var expectedArea = new Rectangle(100, 200, 300, 400);
+            A.CallTo(() => this.nativeMethodWrapper.GetClientRect(A<IntPtr>._, out _))
+                .Returns(false)
+                .AssignsOutAndRefParameters(expectedArea);
+            
+            var exception = Assert.Throws<Exception>(() => this.windowFinder.GetClientArea(IntPtr.Zero));
+
+            Assert.That(exception.Message, Is.EqualTo("Unable to get client area"));
+        }
+
+        private IntPtr ExpectWindow(string windowClass, string windowCaption)
+        {
+            var hWnd = new IntPtr(1337);
             var _ = IntPtr.Zero;
             A.CallTo(() => this.nativeMethodWrapper.GetClassName(A.Dummy<IntPtr>(), A.Dummy<StringBuilder>(), A.Dummy<int>()))
              .WithAnyArguments()
@@ -134,9 +165,12 @@
              .Invokes(fake =>
              {
                  var callback = fake.Arguments.Get<Func<IntPtr, bool>>(1);
-                 callback(new IntPtr(1337));
+                 callback(hWnd);
              })
              .Returns(true);
+
+
+            return hWnd;
         }
     }
 }

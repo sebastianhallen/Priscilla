@@ -1,6 +1,7 @@
 ﻿namespace Priscilla.Native
 {
     using System;
+    using System.Drawing;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -22,6 +23,18 @@
         internal ApplicationWindowFinder(INativeMethodWrapper nativeMethodWrapper)
         {
             this.nativeMethodWrapper = nativeMethodWrapper;
+        }
+
+        public Rectangle GetClientArea(IntPtr hWnd)
+        {
+            Rectangle clientRect;
+            var couldGetClientRect = this.nativeMethodWrapper.GetClientRect(hWnd, out clientRect);
+            if (!couldGetClientRect)
+            {
+                throw new Exception("Unable to get client area");
+            }
+
+            return clientRect;
         }
 
         public IntPtr FindWindow(string windowClass, string windowTitle)

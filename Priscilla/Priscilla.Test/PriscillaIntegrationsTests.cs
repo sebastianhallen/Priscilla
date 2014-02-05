@@ -14,9 +14,7 @@
         {
             IApplicationWindowFinder windowFinder = new ApplicationWindowFinder();
 
-            var viewport = windowFinder.FindWindow("Chrome_WidgetWin_1")
-                                       .FindChildWindow("Chrome_WidgetWin_0")
-                                       .FindChildWindow("Chrome_RenderWidgetHostHWND");
+            var viewport = windowFinder.FindWindow("Chrome_WidgetWin_1", ApplicationWindowFinder.Wildcard + " - Google Chrome");
 
             return new WindowBoundMouse(viewport);
         }
@@ -29,10 +27,8 @@
         protected override IMouse CreateMouse()
         {
             IApplicationWindowFinder windowFinder = new ApplicationWindowFinder();
-            var mainWindow = windowFinder.FindWindow("Chrome_WidgetWin_1", "about:blank - Google Chrome");
-            var viewport = mainWindow
-                            .FindChildWindow("Chrome_WidgetWin_0")
-                            .FindChildWindow("Chrome_RenderWidgetHostHWND");
+            var mainWindow = windowFinder.FindWindow("Chrome_WidgetWin_1", ApplicationWindowFinder.Wildcard + " - Google Chrome");
+            var viewport = mainWindow.FindChildWindow("Static");
 
             return new WindowRelativeMouse(mainWindow, viewport, new Mouse());
         }

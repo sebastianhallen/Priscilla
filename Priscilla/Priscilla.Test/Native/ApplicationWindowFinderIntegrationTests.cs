@@ -55,5 +55,22 @@
 
             Assert.That(chromehWnd, Is.Not.EqualTo(IntPtr.Zero));
         }
+
+        [Test]
+        public void Should_be_able_to_get_window_client_area_for_a_window()
+        {
+            var area = this.windowFinder.FindWindow("Chrome_WidgetWin_1", ApplicationWindowFinder.Wildcard + "pinvoke" + ApplicationWindowFinder.Wildcard + " - Google Chrome")
+                                        .GetClientArea();
+
+            Assert.That(area, Is.Not.EqualTo(new System.Drawing.Rectangle()));
+        }
+
+        [Test]
+        public void Should_explode_when_trying_to_get_window_client_area_from_a_non_existing_window()
+        {
+            var exception = Assert.Throws<Exception>(() => this.windowFinder.FindWindow("ÄADF").GetClientArea());
+
+            Assert.That(exception.Message, Is.EqualTo("Unable to get client area"));
+        }
     }
 }
