@@ -3,7 +3,6 @@
     using FakeItEasy;
     using NUnit.Framework;
     using Priscilla;
-    using Priscilla.Extension;
     using Priscilla.Native;
 
     [TestFixture, Ignore]
@@ -55,6 +54,7 @@
         {
             this.mouse = A.Fake<IMouse>(wrapped => wrapped.Wrapping(this.CreateMouse()));
             A.CallTo(() => this.mouse.LeftDown()).Invokes(_ => { });
+            A.CallTo(() => this.mouse.LeftDown(A<Coordinate>._)).Invokes(_ => { });
         }
 
         [TestCase(0, 0)]
@@ -86,20 +86,22 @@
             this.mouse.DragAndDrop(new Coordinate(fromX, fromY), new Coordinate(toX, toY), movementSpeed: MovementSpeed.Fast);
 
             var position = this.mouse.FindCursor();
+
             Assert.That(position.X, Is.EqualTo(toX));
             Assert.That(position.Y, Is.EqualTo(toY));
         }
 
-        //[Test]
-        //public void Should_be_possible_to_move_the_cursor_a_relative_distance()
-        //{
-        //    this.mouse.MoveTo(new Coordinate(100, 100));
+        [Test]
+        public void Should_be_possible_to_move_the_cursor_a_relative_distance()
+        {
+            this.mouse.MoveTo(new Coordinate(100, 100));
 
-        //    this.mouse.MoveCursor(75, 175);
+            this.mouse.MoveCursor(75, 175);
 
-        //    var currentPosition = this.mouse.FindCursor();
-        //    Assert.That(currentPosition, Is.EqualTo(new Coordinate(175, 25)));
-        //}
+            var currentPosition = this.mouse.FindCursor();
+            Assert.That(currentPosition.X, Is.EqualTo(175));
+            Assert.That(currentPosition.Y, Is.EqualTo(275));
+        }
 
         [Test]
         public void Should_find_the_cursor_where_I_left_it()
@@ -109,7 +111,16 @@
 
             var position = this.mouse.FindCursor();
 
-            Assert.That(position, Is.EqualTo(coordinate));
+            Assert.That(position.X, Is.EqualTo(123));
+            Assert.That(position.Y, Is.EqualTo(321));
+        }
+
+        [Test]
+        public void Click_at_position()
+        {
+            var coordinate = new Coordinate(123, 321);
+            this.mouse.LeftDown(coordinate);
+            this.mouse.LeftUp(coordinate);
         }
     }
 }

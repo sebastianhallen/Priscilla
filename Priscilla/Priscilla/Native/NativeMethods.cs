@@ -41,7 +41,16 @@
         public static extern bool ClientToScreen(IntPtr hWnd, ref CursorCoordinate lpPoint);
 
         [DllImport("user32.dll")]
+        public static extern bool GetClientRect(IntPtr hWnd, out Area lpRect);
+
+        [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        public static extern uint SendInput(uint nInputs, [MarshalAs(UnmanagedType.LPArray), In] Input[] pInputs, int cbSize);
+
+        [DllImport("user32.dll")]
+        public static extern int GetSystemMetrics(SystemMetric metric);
 
         [DllImport("user32.dll")]
         public static extern void mouse_event(UInt32 dwFlags, UInt32 dy, UInt32 dx, UInt32 dwData, IntPtr dwExtraInfo);
@@ -51,8 +60,5 @@
 
         [DllImport("user32.dll")]
         public static extern bool SetCursorPos(int x, int y);
-
-        [DllImport("user32.dll")]
-        public static extern bool GetClientRect(IntPtr hWnd, out Area lpRect);
     }
 }

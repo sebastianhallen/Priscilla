@@ -1,6 +1,7 @@
 ﻿namespace Priscilla.Native
 {
     using System;
+    using System.Runtime.InteropServices;
     using System.Text;
 
     internal class NativeMethodWrapper
@@ -80,6 +81,16 @@
 
             clientRect = area;
             return result;
+        }
+
+        public int GetSystemMetrics(SystemMetric metric)
+        {
+            return NativeMethods.GetSystemMetrics(metric);
+        }
+
+        public uint SendInput(Input[] pInputs)
+        {
+            return NativeMethods.SendInput((uint) pInputs.Length, pInputs, Marshal.SizeOf(typeof(Input)));
         }
     }
 }

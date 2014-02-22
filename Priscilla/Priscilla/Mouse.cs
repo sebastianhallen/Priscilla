@@ -20,7 +20,16 @@
 
         public void PositionCursor(Coordinate coordinate)
         {
-            this.nativeMethodWrapper.SetCursorPos(coordinate.X, coordinate.Y);
+            var screenWidth = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenWidth);
+            var screenHeight = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenHeight);
+
+            this.SendMouseInput(input =>
+                {
+                    input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move;
+                    input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / screenWidth)) + 1;
+                    input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / screenHeight)) + 1;
+                    return input;
+                });
         }
 
         public Coordinate FindCursor()
@@ -35,84 +44,166 @@
 
         public void MoveCursor(int dx, int dy)
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.Move, (uint)dy, (uint)dx, 0, new IntPtr());
+            this.SendMouseInput(input =>
+            {
+                input.Flags = MouseInputFlags.Move;
+                input.X = dx;
+                input.Y = dy;
+                return input;
+            });
         }
 
         public void LeftDown()
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.LeftDown, 0, 0, 0, new IntPtr());
+            this.SendMouseInput(input =>
+            {
+                input.Flags = MouseInputFlags.LeftDown;
+                return input;
+            });
         }
 
         public void LeftDown(Coordinate coordinate)
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.LeftDown | MouseInput.Absolute, (uint) coordinate.Y, (uint) coordinate.X, 0, new IntPtr());
+            var screenWidth = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenWidth);
+            var screenHeight = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenHeight);
+
+            this.SendMouseInput(input =>
+            {
+                input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.LeftDown;
+                input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / screenWidth)) + 1;
+                input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / screenHeight)) + 1;
+                return input;
+            });
         }
 
         public void LeftUp()
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.LeftUp, 0, 0, 0, new IntPtr());
+            this.SendMouseInput(input =>
+            {
+                input.Flags = MouseInputFlags.LeftUp;
+                return input;
+            });
         }
 
         public void LeftUp(Coordinate coordinate)
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.LeftUp | MouseInput.Absolute, (uint)coordinate.Y, (uint)coordinate.X, 0, new IntPtr());
+            var screenWidth = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenWidth);
+            var screenHeight = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenHeight);
+
+            this.SendMouseInput(input =>
+            {
+                input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.LeftUp;
+                input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / screenWidth)) + 1;
+                input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / screenHeight)) + 1;
+                return input;
+            });
         }
 
         public void RightDown()
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.RightDown, 0, 0, 0, new IntPtr());
+            this.SendMouseInput(input =>
+            {
+                input.Flags = MouseInputFlags.RightDown;
+                return input;
+            });
         }
 
         public void RightDown(Coordinate coordinate)
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.RightDown | MouseInput.Absolute, (uint)coordinate.Y, (uint)coordinate.X, 0, new IntPtr());
+            var screenWidth = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenWidth);
+            var screenHeight = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenHeight);
+
+            this.SendMouseInput(input =>
+            {
+                input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.RightDown;
+                input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / screenWidth)) + 1;
+                input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / screenHeight)) + 1;
+                return input;
+            });
+
         }
 
         public void RightUp()
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.RightUp, 0, 0, 0, new IntPtr());
+            this.SendMouseInput(input =>
+            {
+                input.Flags = MouseInputFlags.RightUp;
+                return input;
+            });
         }
 
         public void RightUp(Coordinate coordinate)
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.RightUp | MouseInput.Absolute, (uint)coordinate.Y, (uint)coordinate.X, 0, new IntPtr());
+            var screenWidth = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenWidth);
+            var screenHeight = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenHeight);
+
+            this.SendMouseInput(input =>
+            {
+                input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.RightUp;
+                input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / screenWidth)) + 1;
+                input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / screenHeight)) + 1;
+                return input;
+            });
+
         }
 
         public void MiddleDown()
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.MiddleDown, 0, 0, 0, new IntPtr());
+            this.SendMouseInput(input =>
+            {
+                input.Flags = MouseInputFlags.MiddleDown;
+                return input;
+            });
         }
 
         public void MiddleDown(Coordinate coordinate)
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.MiddleDown | MouseInput.Absolute, (uint)coordinate.Y, (uint)coordinate.X, 0, new IntPtr());
+            var screenWidth = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenWidth);
+            var screenHeight = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenHeight);
+
+            this.SendMouseInput(input =>
+            {
+                input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.MiddleDown;
+                input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / screenWidth)) + 1;
+                input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / screenHeight)) + 1;
+                return input;
+            });
+
         }
 
         public void MiddleUp()
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.MiddleUp, 0, 0, 0, new IntPtr());
+            this.SendMouseInput(input =>
+                {
+                    input.Flags = MouseInputFlags.MiddleUp;
+                    return input;
+                });
         }
 
         public void MiddleUp(Coordinate coordinate)
         {
-            this.nativeMethodWrapper.mouse_event(MouseInput.MiddleUp | MouseInput.Absolute, (uint)coordinate.Y, (uint)coordinate.X, 0, new IntPtr());
+            var screenWidth = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenWidth);
+            var screenHeight = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenHeight);
+
+            this.SendMouseInput(input =>
+            {
+                input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.MiddleUp;
+                input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / screenWidth)) + 1;
+                input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / screenHeight)) + 1;
+                return input;
+            });
+
         }
 
-        internal static class MouseInput
+        private void SendMouseInput(Func<MouseInput, MouseInput> configure)
         {
-            public const uint Absolute = 0x8000;        //The dx and dy parameters contain normalized absolute coordinates. If not set, those parameters contain relative data
-            public const uint VirtualDesktop = 0x4000;  //Maps coordinates to the entire desktop. Must be used with MouseInput.Absolute. 
-            public const uint LeftDown = 0x0002;        //The left button is down.
-            public const uint LeftUp = 0x0004;          //The left button is up.
-            public const uint MiddleDown = 0x0020;      //The middle button is down.
-            public const uint MiddleUp = 0x0040;        //The middle button is up.
-            public const uint Move = 0x0001;            //Movement occurred.
-            public const uint RightDown = 0x0008;       //The right button is down.
-            public const uint RightUp = 0x0010;         //The right button is up.
-            public const uint Wheel = 0x0800;           //The wheel has been moved, if the mouse has a wheel. The amount of movement is specified in dwData
-            public const uint XDown = 0x0080;           //An X button was pressed.
-            public const uint XUp = 0x0100;             //An X button was released.
-            public const uint HWheel = 0x1000;          //The wheel button is tilted.
+            var input = new Input { Type = InputType.Mouse };
+            input.Data.Mouse = configure(input.Data.Mouse);
+
+            this.nativeMethodWrapper.SendInput(new[]
+                {
+                    input
+                });
         }
     }
 }

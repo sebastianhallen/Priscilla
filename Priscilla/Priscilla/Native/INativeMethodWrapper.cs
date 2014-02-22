@@ -32,5 +32,9 @@
         bool GetCursorPos(out CursorCoordinate point);
         bool SetCursorPos(int x, int y);
         bool GetClientRect(IntPtr hWnd, out System.Drawing.Rectangle clientRect);
+
+        int GetSystemMetrics(SystemMetric metric);
+
+        uint SendInput(Input[] pInputs);
     }
 }

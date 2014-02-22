@@ -1,6 +1,7 @@
 ﻿namespace Priscilla.Test
 {
     using System;
+    using System.Linq;
     using FakeItEasy;
     using NUnit.Framework;
     using Priscilla.Native;
@@ -16,14 +17,63 @@
         {
             this.nativeMethodWrapper = A.Fake<INativeMethodWrapper>();
             this.mouse = new Mouse(this.nativeMethodWrapper);
+            A.CallTo(() => this.nativeMethodWrapper.GetSystemMetrics(A<SystemMetric>._)).Returns(65535).NumberOfTimes(2);
         }
 
         [Test]
-        public void Should_set_cursor_position_with_native_wrapper()
+        public void PositionCursor_should_move_cursor_with_absolute_movement()
         {
             this.mouse.PositionCursor(new Coordinate(10, 20));
 
-            A.CallTo(() => this.nativeMethodWrapper.SetCursorPos(10, 20)).MustHaveHappened();
+            Func<Input[], bool> hasMatchingFlags = inputs =>
+                {
+                    var input = inputs.Single().Data.Mouse;
+                    return input.Flags == (MouseInputFlags.Move | MouseInputFlags.Absolute);
+                };
+            A.CallTo(() => this.nativeMethodWrapper.SendInput(A<Input[]>.That.Matches(hasMatchingFlags, "flags to send input did not match"))).MustHaveHappened();
+        }
+
+        [Test]
+        public void PositionCursor_should_position_cursor_at_correct_coordinates()
+        {
+            this.mouse.PositionCursor(new Coordinate(10, 20));
+
+            Func<Input[], bool> hasMatchingCoordinates = inputs =>
+            {
+                var input = inputs.Single().Data.Mouse;
+                //intentional +1 after experimenting a bit with how SendInput 
+                //handles the transformation to screen normalized coordinates
+                return input.X == 11 && input.Y == 21;
+            };
+            A.CallTo(() => this.nativeMethodWrapper.SendInput(A<Input[]>.That.Matches(hasMatchingCoordinates, "coordinates to send input did not match"))).MustHaveHappened();
+        }
+
+        [Test]
+        public void MoveCursor_should_move_cursor_with_relative_movement()
+        {
+            this.mouse.MoveCursor(1, 1);
+
+            Func<Input[], bool> hasMatchingFlags = inputs =>
+            {
+                var input = inputs.Single().Data.Mouse;
+                return input.Flags == (MouseInputFlags.Move);
+            };
+            A.CallTo(() => this.nativeMethodWrapper.SendInput(A<Input[]>.That.Matches(hasMatchingFlags, "flags to send input did not match"))).MustHaveHappened();
+        }
+
+        [Test]
+        public void MoveCursor_should_move_cursor_with_correct_distance()
+        {
+            this.mouse.PositionCursor(new Coordinate(10, 20));
+
+            Func<Input[], bool> hasMatchingCoordinates = inputs =>
+            {
+                var input = inputs.Single().Data.Mouse;
+                //intentional +1 after experimenting a bit with how SendInput 
+                //handles the transformation to screen normalized coordinates 
+                return input.X == 11 && input.Y == 21;
+            };
+            A.CallTo(() => this.nativeMethodWrapper.SendInput(A<Input[]>.That.Matches(hasMatchingCoordinates, "coordinates to send input did not match"))).MustHaveHappened();
         }
 
         [Test]
@@ -38,110 +88,133 @@
         }
 
         [Test]
-        public void Should_move_cursor_with_native_wrapper()
-        {
-            var x = 10;
-            var y = 20;
-
-            this.mouse.MoveCursor(x, y);
-
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.Move, (uint) y, (uint) x, 0, A<IntPtr>._)).MustHaveHappened();
-        }
-
-        [Test]
-        public void Should_press_left_down_with_native_wrapper()
+        public void Should_press_left_down_with_SendInput()
         {
             this.mouse.LeftDown();
 
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.LeftDown, 0, 0, 0, A<IntPtr>._)).MustHaveHappened();
+            this.VerifyMouseButtonCall(MouseInputFlags.LeftDown);
         }
 
         [Test]
-        public void Should_press_left_up_with_native_wrapper()
+        public void Should_press_left_up_with_SendInput()
         {
             this.mouse.LeftUp();
 
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.LeftUp, 0, 0, 0, A<IntPtr>._)).MustHaveHappened();
+            this.VerifyMouseButtonCall(MouseInputFlags.LeftUp);
         }
 
         [Test]
-        public void Should_pres_left_down_at_specific_position_with_native_wrapper()
+        public void LeftDown_at_specific_position_should_perform_action_at_the_expected_coordinates()
         {
             this.mouse.LeftDown(new Coordinate(1024, 768));
 
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.LeftDown | Mouse.MouseInput.Absolute, 768, 1024, 0, A<IntPtr>._)).MustHaveHappened();
+            this.VerifyMouseButtonCall(
+                MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.LeftDown,
+                1024, 768);
         }
 
         [Test]
-        public void Should_press_left_up_at_specific_position_with_native_wrapper()
+        public void LeftUp_at_specific_position_should_perform_action_at_the_expected_coordinates()
         {
             this.mouse.LeftUp(new Coordinate(1024, 768));
 
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.LeftUp | Mouse.MouseInput.Absolute, 768, 1024, 0, A<IntPtr>._)).MustHaveHappened();
+            this.VerifyMouseButtonCall(
+                (MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.LeftUp), 
+                1024, 768);
         }
 
         [Test]
-        public void Should_press_right_down_with_native_wrapper()
+        public void Should_press_right_down_with_SendInput()
         {
             this.mouse.RightDown();
 
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.RightDown, 0, 0, 0, A<IntPtr>._)).MustHaveHappened();
+            this.VerifyMouseButtonCall(MouseInputFlags.RightDown);
         }
 
         [Test]
-        public void Should_press_righ_up_with_native_wrapper()
+        public void Should_press_right_up_with_SendInput()
         {
             this.mouse.RightUp();
 
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.RightUp, 0, 0, 0, A<IntPtr>._)).MustHaveHappened();
+            this.VerifyMouseButtonCall(MouseInputFlags.RightUp);
         }
 
         [Test]
-        public void Should_press_right_down_at_specific_position_with_native_wrapper()
+        public void RightDown_at_specific_position_should_perform_action_at_the_expected_coordinates()
         {
             this.mouse.RightDown(new Coordinate(1024, 768));
 
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.RightDown | Mouse.MouseInput.Absolute, 768, 1024, 0, A<IntPtr>._)).MustHaveHappened();
+            this.VerifyMouseButtonCall(
+                MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.RightDown,
+                1024, 768);
         }
 
         [Test]
-        public void Should_press_right_up_at_specific_position_with_native_wrapper()
+        public void RightUp_at_specific_position_should_perform_action_at_the_expected_coordinates()
         {
             this.mouse.RightUp(new Coordinate(1024, 768));
 
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.RightUp | Mouse.MouseInput.Absolute, 768, 1024, 0, A<IntPtr>._)).MustHaveHappened();
+            this.VerifyMouseButtonCall(
+                (MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.RightUp),
+                1024, 768);
         }
 
         [Test]
-        public void Should_press_middle_down_with_native_wrapper()
+        public void Should_press_Middle_down_with_SendInput()
         {
             this.mouse.MiddleDown();
 
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.MiddleDown, 0, 0, 0, A<IntPtr>._)).MustHaveHappened();
+            this.VerifyMouseButtonCall(MouseInputFlags.MiddleDown);
         }
 
         [Test]
-        public void Should_press_middle_up_with_native_wrapper()
+        public void Should_press_Middle_up_with_SendInput()
         {
             this.mouse.MiddleUp();
 
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.MiddleUp, 0, 0, 0, A<IntPtr>._)).MustHaveHappened();
+            this.VerifyMouseButtonCall(MouseInputFlags.MiddleUp);
         }
 
         [Test]
-        public void Should_press_middle_down_at_specific_position_with_native_wrapper()
+        public void MiddleDown_at_specific_position_should_perform_action_at_the_expected_coordinates()
         {
             this.mouse.MiddleDown(new Coordinate(1024, 768));
 
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.MiddleDown | Mouse.MouseInput.Absolute, 768, 1024, 0, A<IntPtr>._)).MustHaveHappened();
+            this.VerifyMouseButtonCall(
+                MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.MiddleDown,
+                1024, 768);
         }
 
         [Test]
-        public void Should_press_middle_up_at_specific_position_with_native_wrapper()
+        public void MiddleUp_at_specific_position_should_perform_action_at_the_expected_coordinates()
         {
             this.mouse.MiddleUp(new Coordinate(1024, 768));
 
-            A.CallTo(() => this.nativeMethodWrapper.mouse_event(Mouse.MouseInput.MiddleUp | Mouse.MouseInput.Absolute, 768, 1024, 0, A<IntPtr>._)).MustHaveHappened();
+            this.VerifyMouseButtonCall(
+                (MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.MiddleUp),
+                1024, 768);
+        }
+
+        private void VerifyMouseButtonCall(MouseInputFlags flags, int x = -1, int y = -1)
+        {
+            Func<Input[], bool> hasMatchingCoordinates = inputs =>
+            {
+                var input = inputs.Single().Data.Mouse;
+                //intentional +1 after experimenting a bit with how SendInput 
+                //handles the transformation to screen normalized coordinates 
+                return input.X == (x + 1) && input.Y == (y + 1);
+            };
+            Func<Input[], bool> hasMatchingFlags = inputs =>
+            {
+                var input = inputs.Single().Data.Mouse;
+                return input.Flags == flags;
+            };
+
+            Func<Input[], bool> hasMatchingInput = inputs => hasMatchingCoordinates(inputs) && hasMatchingFlags(inputs);
+
+            A.CallTo(() => this.nativeMethodWrapper.SendInput(A<Input[]>.That.Matches(hasMatchingInput,
+                                                                           "input to send input did not match")))
+             .MustHaveHappened();
         }
     }
 }
