@@ -29,6 +29,26 @@
         }
 
         [Test]
+        public void Should_focus_window_before_performing_left_down_at_position()
+        {
+            A.CallTo(() => this.nativeMethodWrapper.GetForegroundWindow()).ReturnsNextFromSequence(IntPtr.Zero, this.hWnd);
+
+            this.windowRelativeMouse.LeftDown(new Coordinate(1, 1));
+
+            A.CallTo(() => this.nativeMethodWrapper.SetForegroundWindow(this.hWnd)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public void Should_focus_window_before_performing_left_up_at_position()
+        {
+            A.CallTo(() => this.nativeMethodWrapper.GetForegroundWindow()).ReturnsNextFromSequence(IntPtr.Zero, this.hWnd);
+
+            this.windowRelativeMouse.LeftUp(new Coordinate(1, 1));
+
+            A.CallTo(() => this.nativeMethodWrapper.SetForegroundWindow(this.hWnd)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
         public void Should_focus_window_before_performing_middle_down()
         {
             A.CallTo(() => this.nativeMethodWrapper.GetForegroundWindow()).ReturnsNextFromSequence(IntPtr.Zero, this.hWnd);
@@ -49,6 +69,26 @@
         }
 
         [Test]
+        public void Should_focus_window_before_performing_middle_down_at_position()
+        {
+            A.CallTo(() => this.nativeMethodWrapper.GetForegroundWindow()).ReturnsNextFromSequence(IntPtr.Zero, this.hWnd);
+
+            this.windowRelativeMouse.MiddleDown(new Coordinate(1, 1));
+
+            A.CallTo(() => this.nativeMethodWrapper.SetForegroundWindow(this.hWnd)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public void Should_focus_window_before_performing_middle_up_at_position()
+        {
+            A.CallTo(() => this.nativeMethodWrapper.GetForegroundWindow()).ReturnsNextFromSequence(IntPtr.Zero, this.hWnd);
+
+            this.windowRelativeMouse.MiddleUp(new Coordinate(1, 1));
+
+            A.CallTo(() => this.nativeMethodWrapper.SetForegroundWindow(this.hWnd)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
         public void Should_focus_window_before_performing_right_down()
         {
             A.CallTo(() => this.nativeMethodWrapper.GetForegroundWindow()).ReturnsNextFromSequence(IntPtr.Zero, this.hWnd);
@@ -64,6 +104,26 @@
             A.CallTo(() => this.nativeMethodWrapper.GetForegroundWindow()).ReturnsNextFromSequence(IntPtr.Zero, this.hWnd);
 
             this.windowRelativeMouse.RightUp();
+
+            A.CallTo(() => this.nativeMethodWrapper.SetForegroundWindow(this.hWnd)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public void Should_focus_window_before_performing_right_down_at_position()
+        {
+            A.CallTo(() => this.nativeMethodWrapper.GetForegroundWindow()).ReturnsNextFromSequence(IntPtr.Zero, this.hWnd);
+
+            this.windowRelativeMouse.RightDown(new Coordinate(1, 1));
+
+            A.CallTo(() => this.nativeMethodWrapper.SetForegroundWindow(this.hWnd)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public void Should_focus_window_before_performing_right_up_at_position()
+        {
+            A.CallTo(() => this.nativeMethodWrapper.GetForegroundWindow()).ReturnsNextFromSequence(IntPtr.Zero, this.hWnd);
+
+            this.windowRelativeMouse.RightUp(new Coordinate(1, 1));
 
             A.CallTo(() => this.nativeMethodWrapper.SetForegroundWindow(this.hWnd)).MustHaveHappened(Repeated.Exactly.Once);
         }

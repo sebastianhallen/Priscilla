@@ -55,9 +55,32 @@
             this.PerformInWindowAction(this.absoluteMouse.LeftDown);
         }
 
+        public void LeftDown(Coordinate coordinate)
+        {
+            this.PerformInWindowAction(() =>
+                {
+                    var screenCoordinate = new CursorCoordinate();
+                    this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
+
+                    this.absoluteMouse.LeftDown(coordinate + screenCoordinate);
+                }
+            );
+        }
+
         public void LeftUp()
         {
             this.PerformInWindowAction(this.absoluteMouse.LeftUp);
+        }
+
+        public void LeftUp(Coordinate coordinate)
+        {
+            this.PerformInWindowAction(() =>
+            {
+                var screenCoordinate = new CursorCoordinate();
+                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
+
+                this.absoluteMouse.LeftUp(coordinate + screenCoordinate);
+            });
         }
 
         public void RightDown()
@@ -65,9 +88,31 @@
             this.PerformInWindowAction(this.absoluteMouse.RightDown);
         }
 
+        public void RightDown(Coordinate coordinate)
+        {
+            this.PerformInWindowAction(() =>
+            {
+                var screenCoordinate = new CursorCoordinate();
+                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
+
+                this.absoluteMouse.RightDown(coordinate + screenCoordinate);
+            });
+        }
+
         public void RightUp()
         {
             this.PerformInWindowAction(this.absoluteMouse.RightUp);
+        }
+
+        public void RightUp(Coordinate coordinate)
+        {
+            this.PerformInWindowAction(() =>
+            {
+                var screenCoordinate = new CursorCoordinate();
+                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
+
+                this.absoluteMouse.RightUp(coordinate + screenCoordinate);
+            });
         }
 
         public void MiddleDown()
@@ -75,9 +120,31 @@
             this.PerformInWindowAction(this.absoluteMouse.MiddleDown);
         }
 
+        public void MiddleDown(Coordinate coordinate)
+        {
+            this.PerformInWindowAction(() =>
+            {
+                var screenCoordinate = new CursorCoordinate();
+                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
+
+                this.absoluteMouse.MiddleDown(coordinate + screenCoordinate);
+            });
+        }
+
         public void MiddleUp()
         {
             this.PerformInWindowAction(this.absoluteMouse.MiddleUp);
+        }
+
+        public void MiddleUp(Coordinate coordinate)
+        {
+            this.PerformInWindowAction(() =>
+            {
+                var screenCoordinate = new CursorCoordinate();
+                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
+
+                this.absoluteMouse.MiddleUp(coordinate + screenCoordinate);
+            });
         }
 
         private void PerformInWindowAction(Action action)

@@ -46,9 +46,19 @@
             this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.LeftDown, MouseButton.Left, IntPtr.Zero);
         }
 
+        public void LeftDown(Coordinate coordinate)
+        {
+            throw new NotImplementedException();
+        }
+
         public void LeftUp()
         {
             this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.LeftUp, MouseButton.Left, IntPtr.Zero);
+        }
+
+        public void LeftUp(Coordinate coordinate)
+        {
+            throw new NotImplementedException();
         }
 
         public void RightDown()
@@ -56,9 +66,19 @@
             this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.RightDown, MouseButton.Right, IntPtr.Zero);
         }
 
+        public void RightDown(Coordinate coordinate)
+        {
+            throw new NotImplementedException();
+        }
+
         public void RightUp()
         {
             this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.RightUp, MouseButton.Right, IntPtr.Zero);
+        }
+
+        public void RightUp(Coordinate coordinate)
+        {
+            throw new NotImplementedException();
         }
 
         public void MiddleDown()
@@ -66,9 +86,19 @@
             this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.MiddleDown, MouseButton.Middle, IntPtr.Zero);
         }
 
+        public void MiddleDown(Coordinate coordinate)
+        {
+            throw new NotImplementedException();
+        }
+
         public void MiddleUp()
         {
             this.nativeMethodWrapper.SendMessage(this.hWnd, MouseInput.MiddleUp, MouseButton.Middle, IntPtr.Zero);
+        }
+
+        public void MiddleUp(Coordinate coordinate)
+        {
+            throw new NotImplementedException();
         }
 
         private static class MouseButton

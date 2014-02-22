@@ -43,9 +43,19 @@
             this.nativeMethodWrapper.mouse_event(MouseInput.LeftDown, 0, 0, 0, new IntPtr());
         }
 
+        public void LeftDown(Coordinate coordinate)
+        {
+            this.nativeMethodWrapper.mouse_event(MouseInput.LeftDown | MouseInput.Absolute, (uint) coordinate.Y, (uint) coordinate.X, 0, new IntPtr());
+        }
+
         public void LeftUp()
         {
             this.nativeMethodWrapper.mouse_event(MouseInput.LeftUp, 0, 0, 0, new IntPtr());
+        }
+
+        public void LeftUp(Coordinate coordinate)
+        {
+            this.nativeMethodWrapper.mouse_event(MouseInput.LeftUp | MouseInput.Absolute, (uint)coordinate.Y, (uint)coordinate.X, 0, new IntPtr());
         }
 
         public void RightDown()
@@ -53,9 +63,19 @@
             this.nativeMethodWrapper.mouse_event(MouseInput.RightDown, 0, 0, 0, new IntPtr());
         }
 
+        public void RightDown(Coordinate coordinate)
+        {
+            this.nativeMethodWrapper.mouse_event(MouseInput.RightDown | MouseInput.Absolute, (uint)coordinate.Y, (uint)coordinate.X, 0, new IntPtr());
+        }
+
         public void RightUp()
         {
             this.nativeMethodWrapper.mouse_event(MouseInput.RightUp, 0, 0, 0, new IntPtr());
+        }
+
+        public void RightUp(Coordinate coordinate)
+        {
+            this.nativeMethodWrapper.mouse_event(MouseInput.RightUp | MouseInput.Absolute, (uint)coordinate.Y, (uint)coordinate.X, 0, new IntPtr());
         }
 
         public void MiddleDown()
@@ -63,9 +83,19 @@
             this.nativeMethodWrapper.mouse_event(MouseInput.MiddleDown, 0, 0, 0, new IntPtr());
         }
 
+        public void MiddleDown(Coordinate coordinate)
+        {
+            this.nativeMethodWrapper.mouse_event(MouseInput.MiddleDown | MouseInput.Absolute, (uint)coordinate.Y, (uint)coordinate.X, 0, new IntPtr());
+        }
+
         public void MiddleUp()
         {
             this.nativeMethodWrapper.mouse_event(MouseInput.MiddleUp, 0, 0, 0, new IntPtr());
+        }
+
+        public void MiddleUp(Coordinate coordinate)
+        {
+            this.nativeMethodWrapper.mouse_event(MouseInput.MiddleUp | MouseInput.Absolute, (uint)coordinate.Y, (uint)coordinate.X, 0, new IntPtr());
         }
 
         internal static class MouseInput
