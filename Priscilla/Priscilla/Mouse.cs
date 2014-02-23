@@ -52,8 +52,8 @@
             this.SendMouseInput(input =>
                 {
                     input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move;
-                    input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / this.ScreenWidth)) + 1;
-                    input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / this.ScreenHeight)) + 1;
+                    input.X = X(coordinate);
+                    input.Y = Y(coordinate); 
                     return input;
                 });
         }
@@ -96,8 +96,8 @@
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.LeftDown;
-                input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / this.ScreenWidth)) + 1;
-                input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / this.ScreenHeight)) + 1;
+                input.X = X(coordinate);
+                input.Y = Y(coordinate); 
                 return input;
             });
         }
@@ -118,8 +118,8 @@
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.LeftUp;
-                input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / this.ScreenWidth)) + 1;
-                input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / this.ScreenHeight)) + 1;
+                input.X = X(coordinate);
+                input.Y = Y(coordinate); 
                 return input;
             });
         }
@@ -140,8 +140,8 @@
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.RightDown;
-                input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / this.ScreenWidth)) + 1;
-                input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / this.ScreenHeight)) + 1;
+                input.X = X(coordinate);
+                input.Y = Y(coordinate); 
                 return input;
             });
 
@@ -163,8 +163,8 @@
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.RightUp;
-                input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / this.ScreenWidth)) + 1;
-                input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / this.ScreenHeight)) + 1;
+                input.X = X(coordinate);
+                input.Y = Y(coordinate); 
                 return input;
             });
 
@@ -186,8 +186,8 @@
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.MiddleDown;
-                input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / this.ScreenWidth)) + 1;
-                input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / this.ScreenHeight)) + 1;
+                input.X = X(coordinate);
+                input.Y = Y(coordinate); 
                 return input;
             });
 
@@ -209,11 +209,21 @@
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.MiddleUp;
-                input.X = Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / this.ScreenWidth)) + 1;
-                input.Y = Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / this.ScreenHeight)) + 1;
+                input.X = X(coordinate);
+                input.Y = Y(coordinate);
                 return input;
             });
 
+        }
+
+        private int X(Coordinate coordinate)
+        {
+            return Convert.ToInt32(Math.Ceiling(coordinate.X * 65535.0 / this.ScreenWidth)) + 1;
+        }
+
+        private int Y(Coordinate coordinate)
+        {
+            return Convert.ToInt32(Math.Ceiling(coordinate.Y * 65535.0 / this.ScreenHeight)) + 1;
         }
 
         private void SendMouseInput(Func<MouseInput, MouseInput> configure)
