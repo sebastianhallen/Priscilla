@@ -1,5 +1,6 @@
 ﻿namespace Priscilla.Test
 {
+    using System;
     using FakeItEasy;
     using NUnit.Framework;
     using Priscilla;
@@ -55,6 +56,7 @@
             this.mouse = A.Fake<IMouse>(wrapped => wrapped.Wrapping(this.CreateMouse()));
             A.CallTo(() => this.mouse.LeftDown()).Invokes(_ => { });
             A.CallTo(() => this.mouse.LeftDown(A<Coordinate>._)).Invokes(_ => { });
+            Logger.Debug = Console.WriteLine;
         }
 
         [TestCase(0, 0)]

@@ -44,6 +44,7 @@
     <Compile Include="Area.cs" />
     <Compile Include="ClickExtensions.cs" />
     <Compile Include="DragExtensions.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="MoveExtensions.cs" />
     <Compile Include="Native\ApplicationWindowFinder.cs" />
     <Compile Include="Coordinate.cs" />

@@ -18,7 +18,6 @@
         internal Mouse(INativeMethodWrapper nativeMethodWrapper)
         {
             this.nativeMethodWrapper = nativeMethodWrapper;
-
         }
 
         private int ScreenHeight
@@ -28,6 +27,7 @@
                 if (!this.screenHeight.HasValue)
                 {
                     this.screenHeight = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenHeight);
+                    Logger.Debug("Using screen height = " + this.screenHeight + "px");
                 }
                 return screenHeight.Value;
             }
@@ -40,6 +40,7 @@
                 if (!this.screenWidth.HasValue)
                 {
                     this.screenWidth = this.nativeMethodWrapper.GetSystemMetrics(SystemMetric.PrimaryScreenWidth);
+                    Logger.Debug("Using screen width = " + this.screenWidth + "px");
                 }
                 return screenWidth.Value;
             }
@@ -47,6 +48,7 @@
 
         public void PositionCursor(Coordinate coordinate)
         {
+            Logger.Debug("Positioning cursor @ " + coordinate);
             this.SendMouseInput(input =>
                 {
                     input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move;
@@ -61,6 +63,7 @@
             CursorCoordinate position;
             if (this.nativeMethodWrapper.GetCursorPos(out position))
             {
+                Logger.Debug("Found cursor @ " + (new Coordinate(0, 0) + position));
                 return position;
             }
             throw new Exception("unable to get cursor position");
@@ -79,6 +82,7 @@
 
         public void LeftDown()
         {
+            Logger.Debug("LeftDown @ current cursor position");
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.LeftDown;
@@ -88,6 +92,7 @@
 
         public void LeftDown(Coordinate coordinate)
         {
+            Logger.Debug("LeftDown @ " + coordinate);
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.LeftDown;
@@ -99,6 +104,7 @@
 
         public void LeftUp()
         {
+            Logger.Debug("LeftUp @ current cursor position");
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.LeftUp;
@@ -108,6 +114,7 @@
 
         public void LeftUp(Coordinate coordinate)
         {
+            Logger.Debug("LeftUp @ " + coordinate);
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.LeftUp;
@@ -119,6 +126,7 @@
 
         public void RightDown()
         {
+            Logger.Debug("LeftDown @ current cursor position");
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.RightDown;
@@ -128,6 +136,7 @@
 
         public void RightDown(Coordinate coordinate)
         {
+            Logger.Debug("RightDown @ " + coordinate);
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.RightDown;
@@ -140,6 +149,7 @@
 
         public void RightUp()
         {
+            Logger.Debug("RightUp @ current cursor position");
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.RightUp;
@@ -149,6 +159,7 @@
 
         public void RightUp(Coordinate coordinate)
         {
+            Logger.Debug("RightUp @ " + coordinate);
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.RightUp;
@@ -161,6 +172,7 @@
 
         public void MiddleDown()
         {
+            Logger.Debug("MiddleDown @ current cursor position");
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.MiddleDown;
@@ -170,6 +182,7 @@
 
         public void MiddleDown(Coordinate coordinate)
         {
+            Logger.Debug("MiddleDown @ " + coordinate);
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.MiddleDown;
@@ -182,6 +195,7 @@
 
         public void MiddleUp()
         {
+            Logger.Debug("MiddleUp @ current cursor position");
             this.SendMouseInput(input =>
                 {
                     input.Flags = MouseInputFlags.MiddleUp;
@@ -191,6 +205,7 @@
 
         public void MiddleUp(Coordinate coordinate)
         {
+            Logger.Debug("MiddleUp @ " + coordinate);
             this.SendMouseInput(input =>
             {
                 input.Flags = MouseInputFlags.Absolute | MouseInputFlags.Move | MouseInputFlags.MiddleUp;

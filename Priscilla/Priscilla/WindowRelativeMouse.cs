@@ -42,6 +42,7 @@
                 var screenCoordinate = new CursorCoordinate();
                 this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
 
+                Logger.Debug("Using window offset: " + (new Coordinate(0, 0) + screenCoordinate));
                 return this.windowOffsetField = screenCoordinate;
             }
         }
