@@ -16,8 +16,8 @@
         public void Before()
         {
             this.nativeMethodWrapper = A.Fake<INativeMethodWrapper>();
-            this.mouse = new Mouse(this.nativeMethodWrapper);
             A.CallTo(() => this.nativeMethodWrapper.GetSystemMetrics(A<SystemMetric>._)).Returns(65535).NumberOfTimes(2);
+            this.mouse = new Mouse(this.nativeMethodWrapper);
         }
 
         [Test]

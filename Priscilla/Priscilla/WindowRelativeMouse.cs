@@ -2,7 +2,6 @@
 {
     using System;
     using Priscilla.Native;
-    using Priscilla.Utils;
     using Priscilla.Utils.Retry;
 
     public class WindowRelativeMouse
@@ -28,21 +27,34 @@
             this.retry = retry;
         }
 
+        public static bool AssumeFixedWindowPosition { get; set; }
+
+        private Coordinate windowOffsetField;
+        private Coordinate WindowOffset
+        {
+            get
+            {
+                if (AssumeFixedWindowPosition && this.windowOffsetField != null)
+                {
+                    return this.windowOffsetField;
+                }
+
+                var screenCoordinate = new CursorCoordinate();
+                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
+
+                return this.windowOffsetField = screenCoordinate;
+            }
+        }
+
         public void PositionCursor(Coordinate coordinate)
         {
-            var screenCoordinate = new CursorCoordinate();
-            this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
-
-            this.absoluteMouse.PositionCursor(coordinate + screenCoordinate);
+            this.absoluteMouse.PositionCursor(coordinate + this.WindowOffset);
         }
 
         public Coordinate FindCursor()
-        {            
-            var screenCoordinate = new CursorCoordinate();
-            this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
-
+        {   
             var position = this.absoluteMouse.FindCursor();
-            return position - screenCoordinate;
+            return position - this.WindowOffset;
         }
 
         public void MoveCursor(int dx, int dy)
@@ -57,14 +69,7 @@
 
         public void LeftDown(Coordinate coordinate)
         {
-            this.PerformInWindowAction(() =>
-                {
-                    var screenCoordinate = new CursorCoordinate();
-                    this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
-
-                    this.absoluteMouse.LeftDown(coordinate + screenCoordinate);
-                }
-            );
+            this.PerformInWindowAction(() => this.absoluteMouse.LeftDown(coordinate + this.WindowOffset));
         }
 
         public void LeftUp()
@@ -74,13 +79,7 @@
 
         public void LeftUp(Coordinate coordinate)
         {
-            this.PerformInWindowAction(() =>
-            {
-                var screenCoordinate = new CursorCoordinate();
-                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
-
-                this.absoluteMouse.LeftUp(coordinate + screenCoordinate);
-            });
+            this.PerformInWindowAction(() => this.absoluteMouse.LeftUp(coordinate + this.WindowOffset));
         }
 
         public void RightDown()
@@ -90,13 +89,7 @@
 
         public void RightDown(Coordinate coordinate)
         {
-            this.PerformInWindowAction(() =>
-            {
-                var screenCoordinate = new CursorCoordinate();
-                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
-
-                this.absoluteMouse.RightDown(coordinate + screenCoordinate);
-            });
+            this.PerformInWindowAction(() => this.absoluteMouse.RightDown(coordinate + this.WindowOffset));
         }
 
         public void RightUp()
@@ -106,13 +99,7 @@
 
         public void RightUp(Coordinate coordinate)
         {
-            this.PerformInWindowAction(() =>
-            {
-                var screenCoordinate = new CursorCoordinate();
-                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
-
-                this.absoluteMouse.RightUp(coordinate + screenCoordinate);
-            });
+            this.PerformInWindowAction(() => this.absoluteMouse.RightUp(coordinate + this.WindowOffset));
         }
 
         public void MiddleDown()
@@ -122,13 +109,7 @@
 
         public void MiddleDown(Coordinate coordinate)
         {
-            this.PerformInWindowAction(() =>
-            {
-                var screenCoordinate = new CursorCoordinate();
-                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
-
-                this.absoluteMouse.MiddleDown(coordinate + screenCoordinate);
-            });
+            this.PerformInWindowAction(() => this.absoluteMouse.MiddleDown(coordinate + this.WindowOffset));
         }
 
         public void MiddleUp()
@@ -138,19 +119,13 @@
 
         public void MiddleUp(Coordinate coordinate)
         {
-            this.PerformInWindowAction(() =>
-            {
-                var screenCoordinate = new CursorCoordinate();
-                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
-
-                this.absoluteMouse.MiddleUp(coordinate + screenCoordinate);
-            });
+            this.PerformInWindowAction(() => this.absoluteMouse.MiddleUp(coordinate + this.WindowOffset));
         }
 
         private void PerformInWindowAction(Action action)
         {
             //this.retry.DontDoUntil(action, this.AggressiveBringToFront);
-            this.retry.DontDoUntil(action, this.NiceBringToFront);            
+            this.retry.DontDoUntil(action, this.NiceBringToFront);
         }
 
         private bool AggressiveBringToFront()
