@@ -4,29 +4,8 @@ namespace Priscilla
 
     public static class MoveExtensions
     {
-        private static int TranslateMovementSpeedToPixelsPerSecond(MovementSpeed movement)
+        public static void MoveTo(this IMouse mouse, Coordinate target, int pixelsPerSecond)
         {
-            switch (movement)
-            {
-                case MovementSpeed.Slow:
-                    return 200;
-                case MovementSpeed.Medium:
-                    return 400;
-                case MovementSpeed.Fast:
-                    return 800;
-                default:
-                    return 400;
-            }
-        }
-
-        public static void MoveTo(this IMouse mouse, Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant)
-        {
-            if (MovementSpeed.Instant.Equals(movementSpeed))
-            {
-                mouse.PositionCursor(target);
-                return;
-            }
-
             //calculate the distance to drag as a double to avoid rounding errors later when converting to int
             var startPosition = mouse.FindCursor();
             var startX = Convert.ToDouble(startPosition.X);
@@ -36,8 +15,7 @@ namespace Priscilla
             var distance = Hypotenuse(dX, dY);
 
             //calculate number of steps needed to perform the move operation
-            var pixelsPerSecond = TranslateMovementSpeedToPixelsPerSecond(movementSpeed);
-            var sectionMovementDuration = 10;
+            const int sectionMovementDuration = 10;
             var steps = CalculateNumberOfMovementSteps(pixelsPerSecond, sectionMovementDuration, distance);
 
             //calculate the movement of each step
@@ -61,15 +39,42 @@ namespace Priscilla
                 //calculate the int rounding error that we need to compensate for in the next iteration
                 xRemainingFraction = incrementTargetX - roundedIncrementTargetX;
                 yRemainingFraction = incrementTargetY - roundedIncrementTargetY;
-       
+
                 //do the actual positioning
                 mouse.PositionCursor(new Coordinate((int)roundedIncrementTargetX, (int)roundedIncrementTargetY));
-                
+
                 System.Threading.Thread.Sleep(sectionMovementDuration);
             }
 
             //snap to end position
             mouse.PositionCursor(new Coordinate(target.X, target.Y));
+        }
+
+        public static void MoveTo(this IMouse mouse, Coordinate target, MovementSpeed movementSpeed = MovementSpeed.Instant)
+        {
+            if (MovementSpeed.Instant.Equals(movementSpeed))
+            {
+                mouse.PositionCursor(target);
+                return;
+            }
+
+            var pixelsPerSecond = TranslateMovementSpeedToPixelsPerSecond(movementSpeed);
+            MoveTo(mouse, target, pixelsPerSecond);
+        }
+
+        private static int TranslateMovementSpeedToPixelsPerSecond(MovementSpeed movement)
+        {
+            switch (movement)
+            {
+                case MovementSpeed.Slow:
+                    return 200;
+                case MovementSpeed.Medium:
+                    return 400;
+                case MovementSpeed.Fast:
+                    return 800;
+                default:
+                    return 400;
+            }
         }
 
         private static double Hypotenuse(double a, double b)

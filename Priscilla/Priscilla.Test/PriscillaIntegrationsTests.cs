@@ -62,9 +62,22 @@
         [TestCase(256, 256)]
         [TestCase(512, 128)]
         [TestCase(333, 111)]
-        public void Mouse_should_be_at_specified_coordinates_after_it_has_been_moved(int x, int y)
+        public void Mouse_should_be_at_specified_coordinates_after_it_has_been_moved_with_predefined_speed(int x, int y)
         {
             this.mouse.MoveTo(new Coordinate(x, y), MovementSpeed.Fast);
+
+            var position = this.mouse.FindCursor();
+            Assert.That(position.X, Is.EqualTo(x));
+            Assert.That(position.Y, Is.EqualTo(y));
+        }
+
+        [TestCase(100, 100)]
+        [TestCase(256, 256)]
+        [TestCase(512, 128)]
+        [TestCase(333, 111)]
+        public void Mouse_should_be_at_specified_coordinates_after_it_has_been_moved_with_user_defined_speed(int x, int y)
+        {
+            this.mouse.MoveTo(new Coordinate(x, y), 1000);
 
             var position = this.mouse.FindCursor();
             Assert.That(position.X, Is.EqualTo(x));

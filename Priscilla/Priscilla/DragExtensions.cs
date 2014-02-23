@@ -8,6 +8,13 @@ namespace Priscilla
             mouse.MoveTo(target, movementSpeed);
             mouse.LeftUp(target);
         }
+
+        public static void DragAndDrop(this IMouse mouse, Coordinate origin, Coordinate target, int pixelsPerSecond)
+        {
+            mouse.LeftDown(origin);
+            mouse.MoveTo(target, pixelsPerSecond);
+            mouse.LeftUp(target);
+        }
     }
 
 }
