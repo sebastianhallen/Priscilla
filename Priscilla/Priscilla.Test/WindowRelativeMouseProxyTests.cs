@@ -1,7 +1,6 @@
 ﻿namespace Priscilla.Test
 {
-    using System;
-    using FakeItEasy;
+	using FakeItEasy;
     using NUnit.Framework;
  
     [TestFixture]
@@ -28,6 +27,7 @@
         public void AfterEach()
         {
             WindowRelativeMouse.AssumeFixedWindowPosition = false;
+	        WindowRelativeMouse.AllowTopLeftPosition = true;
         }
 
         [Test]
@@ -140,16 +140,5 @@
             A.CallTo(() => this.innerMouse.MoveCursor(1, 2)).MustHaveHappened();
         }
 
-        [Test]
-        public void Should_cache_window_offset_when_assuming_fixed_window_position()
-        {
-            WindowRelativeMouse.AssumeFixedWindowPosition = true;
-
-            this.windowRelativeMouse.FindCursor();
-            this.windowRelativeMouse.FindCursor();
-
-            var _ = new CursorCoordinate();
-            A.CallTo(() => this.nativeMethodWrapper.ClientToScreen(A<IntPtr>._, ref _)).WithAnyArguments().MustHaveHappened(Repeated.Exactly.Once);
-        }
     }
 }

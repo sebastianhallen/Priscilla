@@ -27,6 +27,15 @@
             this.retry = retry;
         }
 
+	    private static bool? _allowTopLeftPositionField;
+	    public static bool AllowTopLeftPosition
+	    {
+		    get
+		    {
+			    return !_allowTopLeftPositionField.HasValue || _allowTopLeftPositionField.Value;
+		    }
+			set { _allowTopLeftPositionField = value; }
+	    }
         public static bool AssumeFixedWindowPosition { get; set; }
 
         private Coordinate windowOffsetField;
@@ -40,14 +49,27 @@
                 }
 
                 var screenCoordinate = new CursorCoordinate();
-                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
+				this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
+				this.retry.DoUntil(
+					() => this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate),
+					() =>
+						{
+							var isTopLeftPosition = (screenCoordinate.X == 0 && screenCoordinate.Y == 0);
 
+							if (!AllowTopLeftPosition && isTopLeftPosition)
+							{
+								Logger.Debug("Window is in top left corner when not allowing top left position with relative mouse");
+								return false;
+							}
+
+							return true;
+						});
                 Logger.Debug("Using window offset: " + (new Coordinate(0, 0) + screenCoordinate));
                 return this.windowOffsetField = screenCoordinate;
             }
         }
 
-        public void PositionCursor(Coordinate coordinate)
+	    public void PositionCursor(Coordinate coordinate)
         {
             this.absoluteMouse.PositionCursor(coordinate + this.WindowOffset);
         }

@@ -67,6 +67,7 @@
     <Compile Include="WindowRelativeMouseFocusWindowTests.cs" />
     <Compile Include="WindowRelativeMouseProxyTests.cs" />
     <Compile Include="WindowRelativeMouseTests.cs" />
+    <Compile Include="WindowRelativeMouseWindowPositionCheckingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

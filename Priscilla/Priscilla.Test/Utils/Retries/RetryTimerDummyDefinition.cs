@@ -1,6 +1,7 @@
 ﻿namespace Priscilla.Test.Utils.Retries
 {
-    using FakeItEasy;    
+	using System;
+	using FakeItEasy;    
     using Priscilla.Utils.Retry;
 
     public class RetryTimerDummyDefinition
@@ -8,6 +9,7 @@
     {
         protected override IRetryTimer CreateDummy()
         {
+			Console.WriteLine("Using single retries");
             return new SingleTryRetryTimer();
         }
 
