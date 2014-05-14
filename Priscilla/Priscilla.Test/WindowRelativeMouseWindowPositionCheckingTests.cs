@@ -19,6 +19,7 @@
 		{
 			WindowRelativeMouse.AssumeFixedWindowPosition = false;
 			WindowRelativeMouse.AllowTopLeftPosition = true;
+			WindowRelativeMouse.AssumeFixedWindowPositionThreshold = 1;
 		}
 
 
@@ -32,6 +33,21 @@
 
 			var _ = new CursorCoordinate();
 			A.CallTo(() => this.nativeMethodWrapper.ClientToScreen(A<IntPtr>._, ref _)).WithAnyArguments().MustHaveHappened(Repeated.Exactly.Once);
+		}
+
+		[Test]
+		public void Should_cache_window_offset_after_find_threshold_has_been_reached_when_assuming_fixed_window_position_and_using_custom_threshold()
+		{
+
+			WindowRelativeMouse.AssumeFixedWindowPosition = true;
+			WindowRelativeMouse.AssumeFixedWindowPositionThreshold = 2;
+
+			this.windowRelativeMouse.FindCursor();
+			this.windowRelativeMouse.FindCursor();
+			this.windowRelativeMouse.FindCursor();
+
+			var _ = new CursorCoordinate();
+			A.CallTo(() => this.nativeMethodWrapper.ClientToScreen(A<IntPtr>._, ref _)).WithAnyArguments().MustHaveHappened(Repeated.Exactly.Times(2));
 		}
 
 		[Test]

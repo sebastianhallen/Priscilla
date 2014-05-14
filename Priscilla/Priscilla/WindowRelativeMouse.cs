@@ -36,14 +36,30 @@
 		    }
 			set { _allowTopLeftPositionField = value; }
 	    }
-        public static bool AssumeFixedWindowPosition { get; set; }
 
+	    private static int? _assumeFixedWindowPositionThresholdField;
+		public static int AssumeFixedWindowPositionThreshold
+		{
+			get
+			{
+				if (_assumeFixedWindowPositionThresholdField.HasValue)
+				{
+					return _assumeFixedWindowPositionThresholdField.Value;
+				}
+
+				return 1;
+			}
+			set { _assumeFixedWindowPositionThresholdField = value; }
+		}
+		public static bool AssumeFixedWindowPosition { get; set; }
+		private static int AssumeFixedWindowPositionThresholdTries { get; set; }
+	    
         private Coordinate windowOffsetField;
         private Coordinate WindowOffset
         {
             get
             {
-                if (AssumeFixedWindowPosition && this.windowOffsetField != null)
+				if (AssumeFixedWindowPosition && ++AssumeFixedWindowPositionThresholdTries > AssumeFixedWindowPositionThreshold && this.windowOffsetField != null)
                 {
                     return this.windowOffsetField;
                 }
