@@ -14,19 +14,14 @@
 			A.CallTo(() => this.nativeMethodWrapper.GetForegroundWindow()).Returns(this.hWnd);
 		}
 
-		[TearDown]
-		public void AfterEach()
-		{
-			WindowRelativeMouse.AssumeFixedWindowPosition = false;
-			WindowRelativeMouse.AllowTopLeftPosition = true;
-			WindowRelativeMouse.AssumeFixedWindowPositionThreshold = 1;
-		}
-
-
 		[Test]
 		public void Should_cache_window_offset_when_assuming_fixed_window_position()
 		{
-			WindowRelativeMouse.AssumeFixedWindowPosition = true;
+			var settings = new WindowRelativeMouse.Settings()
+				{
+					AssumeFixedWindowPosition = true
+				};
+			this.windowRelativeMouse = new WindowRelativeMouse(this.hWnd, this.hWnd, this.innerMouse, this.nativeMethodWrapper, this.retrier, settings);
 
 			this.windowRelativeMouse.FindCursor();
 			this.windowRelativeMouse.FindCursor();
@@ -38,9 +33,12 @@
 		[Test]
 		public void Should_cache_window_offset_after_find_threshold_has_been_reached_when_assuming_fixed_window_position_and_using_custom_threshold()
 		{
-
-			WindowRelativeMouse.AssumeFixedWindowPosition = true;
-			WindowRelativeMouse.AssumeFixedWindowPositionThreshold = 2;
+			var settings = new WindowRelativeMouse.Settings()
+			{
+				AssumeFixedWindowPosition = true,
+				AssumeFixedWindowPositionThreshold = 2
+			};
+			this.windowRelativeMouse = new WindowRelativeMouse(this.hWnd, this.hWnd, this.innerMouse, this.nativeMethodWrapper, this.retrier, settings);
 
 			this.windowRelativeMouse.FindCursor();
 			this.windowRelativeMouse.FindCursor();
@@ -54,8 +52,12 @@
 		public void Should_retry_getting_window_position_until_position_is_not_in_top_left_corner_when_AllowTopLeftPosition_is_false()
 		{
 			var _ = new CursorCoordinate();
+			var settings = new WindowRelativeMouse.Settings()
+			{
+				AllowTopLeftPosition = false
+			};
+			this.windowRelativeMouse = new WindowRelativeMouse(this.hWnd, this.hWnd, this.innerMouse, this.nativeMethodWrapper, this.retrier, settings);
 
-			WindowRelativeMouse.AllowTopLeftPosition = false;
 			this.windowRelativeMouse.FindCursor();
 
 			A.CallTo(() => this.nativeMethodWrapper.ClientToScreen(A<IntPtr>._, ref _)).MustHaveHappened(Repeated.Exactly.Twice);

@@ -7,59 +7,49 @@
     public class WindowRelativeMouse
         : IMouse
     {
-        private readonly IntPtr parenthWnd;
+	    public class Settings
+	    {
+		    public Settings()
+		    {
+			    this.AllowTopLeftPosition = true;
+			    this.AssumeFixedWindowPosition = false;
+			    this.AssumeFixedWindowPositionThreshold = 1;
+		    }
+
+			public bool AllowTopLeftPosition { get; set; }
+			public int AssumeFixedWindowPositionThreshold { get; set; }
+			public bool AssumeFixedWindowPosition { get; set; }
+	    }
+
+	    private readonly IntPtr parenthWnd;
         private readonly IntPtr hWnd;
         private readonly IMouse absoluteMouse;
         private readonly INativeMethodWrapper nativeMethodWrapper;
         private readonly IRetrier retry;
-
-        public WindowRelativeMouse(IntPtr parenthWnd, IntPtr hWnd, IMouse mouse)
-            : this(parenthWnd, hWnd, mouse, new NativeMethodWrapper(), new Retrier(new RetryTimerFactory()))
+	    private readonly Settings settings;
+		private int assumeFixedWindowPositionThresholdTries;
+	    
+	    public WindowRelativeMouse(IntPtr parenthWnd, IntPtr hWnd, IMouse mouse, Settings settings = null)
+            : this(parenthWnd, hWnd, mouse, new NativeMethodWrapper(), new Retrier(new RetryTimerFactory()), settings)
         {
         }
 
-        internal WindowRelativeMouse(IntPtr parenthWnd, IntPtr hWnd, IMouse mouse, INativeMethodWrapper nativeMethodWrapper, IRetrier retry)
+		internal WindowRelativeMouse(IntPtr parenthWnd, IntPtr hWnd, IMouse mouse, INativeMethodWrapper nativeMethodWrapper, IRetrier retry, Settings settings = null)
         {
             this.parenthWnd = parenthWnd;
             this.hWnd = hWnd;
             this.absoluteMouse = mouse;
             this.nativeMethodWrapper = nativeMethodWrapper;
             this.retry = retry;
+			this.settings = settings ?? new Settings();
         }
 
-	    private static bool? _allowTopLeftPositionField;
-	    public static bool AllowTopLeftPosition
-	    {
-		    get
-		    {
-			    return !_allowTopLeftPositionField.HasValue || _allowTopLeftPositionField.Value;
-		    }
-			set { _allowTopLeftPositionField = value; }
-	    }
-
-	    private static int? _assumeFixedWindowPositionThresholdField;
-		public static int AssumeFixedWindowPositionThreshold
-		{
-			get
-			{
-				if (_assumeFixedWindowPositionThresholdField.HasValue)
-				{
-					return _assumeFixedWindowPositionThresholdField.Value;
-				}
-
-				return 1;
-			}
-			set { _assumeFixedWindowPositionThresholdField = value; }
-		}
-		public static bool AssumeFixedWindowPosition { get; set; }
-		private static int AssumeFixedWindowPositionThresholdTries { get; set; }
-	    
         private Coordinate windowOffsetField;
         private Coordinate WindowOffset
         {
             get
             {
-				if (AssumeFixedWindowPosition && ++AssumeFixedWindowPositionThresholdTries > AssumeFixedWindowPositionThreshold && this.windowOffsetField != null)
+				if (this.settings.AssumeFixedWindowPosition && ++assumeFixedWindowPositionThresholdTries > this.settings.AssumeFixedWindowPositionThreshold && this.windowOffsetField != null)
                 {
                     return this.windowOffsetField;
                 }
@@ -72,7 +62,7 @@
 						{
 							var isTopLeftPosition = (screenCoordinate.X == 0 && screenCoordinate.Y == 0);
 
-							if (!AllowTopLeftPosition && isTopLeftPosition)
+							if (!this.settings.AllowTopLeftPosition && isTopLeftPosition)
 							{
 								Logger.Debug("Window is in top left corner when not allowing top left position with relative mouse");
 								return false;

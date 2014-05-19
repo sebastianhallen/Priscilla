@@ -23,13 +23,6 @@
                  });
         }
 
-        [TearDown]
-        public void AfterEach()
-        {
-            WindowRelativeMouse.AssumeFixedWindowPosition = false;
-	        WindowRelativeMouse.AllowTopLeftPosition = true;
-        }
-
         [Test]
         public void LeftDown_should_proxy_inner_mouse()
         {

@@ -13,18 +13,19 @@
         protected INativeMethodWrapper nativeMethodWrapper;
         protected IRetryTimerFactory retrierFactory;
         protected IntPtr hWnd;
+	    protected Retrier retrier;
 
-        [SetUp]
+	    [SetUp]
         public void Before()
         {
             this.hWnd = new IntPtr(1337);            
             this.innerMouse = A.Fake<IMouse>();
             this.nativeMethodWrapper = A.Fake<INativeMethodWrapper>();
             this.retrierFactory = A.Fake<IRetryTimerFactory>();            
-            var retrier = new Retrier(this.retrierFactory);
+            this.retrier = new Retrier(this.retrierFactory);
 
             A.CallTo(() => this.retrierFactory.Create(A<TimeSpan>._)).Returns(A.Dummy<IRetryTimer>());
-            this.windowRelativeMouse = new WindowRelativeMouse(this.hWnd, this.hWnd, this.innerMouse, this.nativeMethodWrapper, retrier);
+            this.windowRelativeMouse = new WindowRelativeMouse(this.hWnd, this.hWnd, this.innerMouse, this.nativeMethodWrapper, this.retrier);
         }
     }
 }
