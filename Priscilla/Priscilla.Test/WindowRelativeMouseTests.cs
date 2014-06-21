@@ -4,6 +4,7 @@
     using FakeItEasy;
     using NUnit.Framework;
     using Priscilla.Native;
+    using Priscilla.Test.Utils.Retries;
     using Priscilla.Utils.Retry;
 
     internal class WindowRelativeMouseTests
@@ -18,14 +19,15 @@
 	    [SetUp]
         public void Before()
         {
-            this.hWnd = new IntPtr(1337);            
+            this.hWnd = new IntPtr(1337);
             this.innerMouse = A.Fake<IMouse>();
             this.nativeMethodWrapper = A.Fake<INativeMethodWrapper>();
-            this.retrierFactory = A.Fake<IRetryTimerFactory>();            
+            this.retrierFactory = new NRetryTimerFactory(0);
             this.retrier = new Retrier(this.retrierFactory);
 
-            A.CallTo(() => this.retrierFactory.Create(A<TimeSpan>._)).Returns(A.Dummy<IRetryTimer>());
             this.windowRelativeMouse = new WindowRelativeMouse(this.hWnd, this.hWnd, this.innerMouse, this.nativeMethodWrapper, this.retrier);
         }
     }
+
+    
 }

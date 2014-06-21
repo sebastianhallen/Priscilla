@@ -4,6 +4,8 @@ namespace Priscilla
 
     public static class MoveExtensions
     {
+	    public static int SectionMovementDuration = 10;
+
         public static void MoveTo(this IMouse mouse, Coordinate target, int pixelsPerSecond)
         {
             //calculate the distance to drag as a double to avoid rounding errors later when converting to int
@@ -15,8 +17,7 @@ namespace Priscilla
             var distance = Hypotenuse(dX, dY);
 
             //calculate number of steps needed to perform the move operation
-            const int sectionMovementDuration = 10;
-            var steps = CalculateNumberOfMovementSteps(pixelsPerSecond, sectionMovementDuration, distance);
+			var steps = CalculateNumberOfMovementSteps(pixelsPerSecond, SectionMovementDuration, distance);
 
             //calculate the movement of each step
             var incrementX = dX / steps;
@@ -43,7 +44,7 @@ namespace Priscilla
                 //do the actual positioning
                 mouse.PositionCursor(new Coordinate((int)roundedIncrementTargetX, (int)roundedIncrementTargetY));
 
-                System.Threading.Thread.Sleep(sectionMovementDuration);
+                System.Threading.Thread.Sleep(SectionMovementDuration);
             }
 
             //snap to end position

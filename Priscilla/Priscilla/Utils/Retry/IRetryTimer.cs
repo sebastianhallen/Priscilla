@@ -2,6 +2,6 @@
 {
     public interface IRetryTimer
     {
-        bool TimedOut { get; }
+        bool TimedOut();
     }
 }

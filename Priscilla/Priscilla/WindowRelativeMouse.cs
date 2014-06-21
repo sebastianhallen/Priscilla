@@ -49,29 +49,43 @@
         {
             get
             {
-				if (this.settings.AssumeFixedWindowPosition && ++assumeFixedWindowPositionThresholdTries > this.settings.AssumeFixedWindowPositionThreshold && this.windowOffsetField != null)
+				if (this.settings.AssumeFixedWindowPosition)
                 {
-                    return this.windowOffsetField;
+                    if (assumeFixedWindowPositionThresholdTries >= this.settings.AssumeFixedWindowPositionThreshold && this.windowOffsetField != null)
+                    {
+                        return this.windowOffsetField;
+                    }
+                    ++assumeFixedWindowPositionThresholdTries;
                 }
-
+            
                 var screenCoordinate = new CursorCoordinate();
-				this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
+                var hasAllowedPosition = false;
+
+                this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate);
 				this.retry.DoUntil(
 					() => this.nativeMethodWrapper.ClientToScreen(this.hWnd, ref screenCoordinate),
 					() =>
 						{
-							var isTopLeftPosition = (screenCoordinate.X == 0 && screenCoordinate.Y == 0);
+						    var isTopLeftPosition = (screenCoordinate.X == 0 && screenCoordinate.Y == 0);
 
 							if (!this.settings.AllowTopLeftPosition && isTopLeftPosition)
 							{
-								Logger.Debug("Window is in top left corner when not allowing top left position with relative mouse");
 								return false;
 							}
-
+						    hasAllowedPosition = true;
 							return true;
 						});
-                Logger.Debug("Using window offset: " + (new Coordinate(0, 0) + screenCoordinate));
-                return this.windowOffsetField = screenCoordinate;
+                if (!hasAllowedPosition)
+                {
+                    Logger.Error("Window for handle '" + this.hWnd + "' was either: positioned in top left corner, not displayed, or didn't exist");
+                }
+                else
+                {
+                    this.windowOffsetField = screenCoordinate;
+                }
+
+                Logger.Info("Using window offset: " + (new Coordinate(0, 0) + screenCoordinate));
+                return screenCoordinate;
             }
         }
 
@@ -153,8 +167,8 @@
 
         private void PerformInWindowAction(Action action)
         {
-            //this.retry.DontDoUntil(action, this.AggressiveBringToFront);
-            this.retry.DontDoUntil(action, this.NiceBringToFront);
+            this.retry.DontDoUntil(() => { }, this.NiceBringToFront);
+            action();
         }
 
         private bool AggressiveBringToFront()

@@ -25,7 +25,7 @@
             
             var timer = this.retryTimerFactory.Create(this.timeoutLimit);
 
-            while (!condition() && !timer.TimedOut)
+            while (!condition() && !timer.TimedOut())
             {
                 action();
             }
@@ -37,7 +37,7 @@
             
             var timer = this.retryTimerFactory.Create(this.timeoutLimit);
             bool fulfilled;
-            while (!(fulfilled = whenFulfilled()) && !timer.TimedOut)
+            while (!(fulfilled = whenFulfilled()) && !timer.TimedOut())
             {
 
             }

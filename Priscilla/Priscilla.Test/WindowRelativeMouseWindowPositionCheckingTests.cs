@@ -3,8 +3,10 @@
 	using System;
 	using FakeItEasy;
 	using NUnit.Framework;
+	using Priscilla.Test.Utils.Retries;
+	using Priscilla.Utils.Retry;
 
-	[TestFixture]
+    [TestFixture]
 	internal class WindowRelativeMouseWindowPositionCheckingTests
 		: WindowRelativeMouseTests
 	{
@@ -48,6 +50,25 @@
 			A.CallTo(() => this.nativeMethodWrapper.ClientToScreen(A<IntPtr>._, ref _)).WithAnyArguments().MustHaveHappened(Repeated.Exactly.Times(2));
 		}
 
+        [Test]
+        public void Should_not_cache_window_position_when_window_is_in_illegal_position()
+        {
+            var settings = new WindowRelativeMouse.Settings()
+            {
+                AllowTopLeftPosition = false,
+                AssumeFixedWindowPosition = true,
+                AssumeFixedWindowPositionThreshold = 1
+            };
+            this.windowRelativeMouse = new WindowRelativeMouse(this.hWnd, this.hWnd, this.innerMouse, this.nativeMethodWrapper, this.retrier, settings);
+
+            this.windowRelativeMouse.FindCursor();
+            this.windowRelativeMouse.FindCursor();
+
+            var _ = new CursorCoordinate();
+            A.CallTo(() => this.nativeMethodWrapper.ClientToScreen(A<IntPtr>._, ref _)).WithAnyArguments().MustHaveHappened(Repeated.Exactly.Times(2));
+
+        }
+
 		[Test]
 		public void Should_retry_getting_window_position_until_position_is_not_in_top_left_corner_when_AllowTopLeftPosition_is_false()
 		{
@@ -56,7 +77,9 @@
 			{
 				AllowTopLeftPosition = false
 			};
-			this.windowRelativeMouse = new WindowRelativeMouse(this.hWnd, this.hWnd, this.innerMouse, this.nativeMethodWrapper, this.retrier, settings);
+            var singleRetryFactory = new NRetryTimerFactory(1);
+            
+			this.windowRelativeMouse = new WindowRelativeMouse(this.hWnd, this.hWnd, this.innerMouse, this.nativeMethodWrapper, new Retrier(singleRetryFactory), settings);
 
 			this.windowRelativeMouse.FindCursor();
 

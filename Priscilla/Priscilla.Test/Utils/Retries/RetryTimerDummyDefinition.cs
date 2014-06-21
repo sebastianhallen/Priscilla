@@ -10,18 +10,39 @@
         protected override IRetryTimer CreateDummy()
         {
 			Console.WriteLine("Using single retries");
-            return new SingleTryRetryTimer();
+            return new NRetryTimer(1);
+        }
+    }
+
+    internal class NRetryTimerFactory
+        : IRetryTimerFactory
+    {
+        private readonly int retries;
+
+        public NRetryTimerFactory(int retries)
+        {
+            this.retries = retries;
         }
 
-        private class SingleTryRetryTimer
-            : IRetryTimer
+        public IRetryTimer Create(TimeSpan timeoutLimit)
         {
-            private int tries = 0;
+            return new NRetryTimer(this.retries);
+        }
+    }
 
-            public bool TimedOut 
-            {
-                get { return tries++ > 0; }
-            }
+    internal class NRetryTimer
+        : IRetryTimer
+    {
+        private int remainingTries;
+
+        public NRetryTimer(int retries)
+        {
+            this.remainingTries = retries;
+        }
+
+        public bool TimedOut()
+        {
+            return this.remainingTries-- <= 0;
         }
     }
 }

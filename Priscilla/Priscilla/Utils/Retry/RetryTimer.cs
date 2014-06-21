@@ -15,9 +15,9 @@
             this.stopwatch = Stopwatch.StartNew();
         }
 
-        public bool TimedOut
+        public bool TimedOut()
         {
-            get { return this.stopwatch.Elapsed > this.timeoutLimit; }
+            return this.stopwatch.Elapsed > this.timeoutLimit;
         }
     }
 }

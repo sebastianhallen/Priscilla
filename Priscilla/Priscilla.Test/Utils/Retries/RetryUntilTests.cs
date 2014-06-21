@@ -8,9 +8,11 @@
     [TestFixture]
     public class RetryUntilTests
     {
+#pragma warning disable 649
         [UnderTest] private Retrier retrier;
         [Fake] private IRetryTimer retryTimer;
         [Fake] private IRetryTimerFactory retryTimerFactory;
+#pragma warning restore 649
 
         [SetUp]
         public void Before()
@@ -33,7 +35,7 @@
         public void Should_perform_action_when_retry_condition_is_not_satisfied()
         {
             var actionPerformed = false;
-            A.CallTo(() => this.retryTimer.TimedOut).ReturnsNextFromSequence(false, true);
+            A.CallTo(() => this.retryTimer.TimedOut()).ReturnsNextFromSequence(false, true);
 
             this.retrier.DoUntil(() => { actionPerformed = true; }, () => false, TimeSpan.FromSeconds(1));
 
@@ -44,7 +46,7 @@
         public void DontDoUntil_should_not_perform_action_when_condition_is_not_satisfied()
         {
             var actionPerformed = false;
-            A.CallTo(() => this.retryTimer.TimedOut).ReturnsNextFromSequence(false, true);
+            A.CallTo(() => this.retryTimer.TimedOut()).ReturnsNextFromSequence(false, true);
 
             this.retrier.DontDoUntil(() => { actionPerformed = true; }, () => false, TimeSpan.FromSeconds(1));
 
