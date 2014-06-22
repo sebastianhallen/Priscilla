@@ -9,16 +9,19 @@
     public class RetryUntilTests
     {
 #pragma warning disable 649
-        [UnderTest] private Retrier retrier;
+        [UnderTest] private Retrier retrierSut;
         [Fake] private IRetryTimer retryTimer;
         [Fake] private IRetryTimerFactory retryTimerFactory;
 #pragma warning restore 649
+        private IRetrier retrier;
 
         [SetUp]
         public void Before()
         {
             Fake.InitializeFixture(this);
             A.CallTo(() => this.retryTimerFactory.Create(A<TimeSpan>._)).Returns(this.retryTimer);
+
+            this.retrier = retrierSut;
         }
 
         [Test]

@@ -16,10 +16,10 @@
             this.retryTimerFactory = retryTimerFactory;
             this.timeoutLimit = TimeSpan.FromSeconds(5);
             this.until = () => true;
-            this.action = () => System.Threading.Thread.Sleep(this.timeoutLimit);
+            this.action = () => { throw new InvalidOperationException("No state changing action defined."); };
         }
 
-        public void DoUntil(Action action, Func<bool> condition, TimeSpan? timeout)
+        void IRetrier.DoUntil(Action action, Func<bool> condition, TimeSpan? timeout)
         {
             this.timeoutLimit = timeout.HasValue ? timeout.Value : this.timeoutLimit;
             
@@ -31,7 +31,7 @@
             }
         }
 
-        public void DontDoUntil(Action perform, Func<bool> whenFulfilled, TimeSpan? timeout)
+        void IRetrier.DontDoUntil(Action perform, Func<bool> whenFulfilled, TimeSpan? timeout)
         {
             this.timeoutLimit = timeout.HasValue ? timeout.Value : this.timeoutLimit;
             
@@ -49,19 +49,19 @@
 
         }
 
-        public void Until(Func<bool> until)
+        void IDoFor.Until(Func<bool> until)
         {
             this.until = until;
-            this.DoUntil(this.action, this.until, this.timeoutLimit);
+            ((IRetrier) this).DoUntil(this.action, this.until, this.timeoutLimit);
         }
 
-        public IDoFor ForNoLongerThan(TimeSpan timeoutLimit)
+        IDoFor IDo.ForNoLongerThan(TimeSpan timeoutLimit)
         {
             this.timeoutLimit = timeoutLimit;
             return this;
         }
 
-        public IDo Do(Action action)
+        IDo IRetrier.Do(Action action)
         {
             this.action = action;
             return this;
