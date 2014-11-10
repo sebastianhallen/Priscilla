@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Priscilla</id>
+		<title>Priscilla</title>
+        <version>0.8.3</version>
+        <authors>Sebastian Hallén</authors>
+		<projectUrl>https://github.com/sebastianhallen/Priscilla</projectUrl>
+        <licenseUrl>https://raw.githubusercontent.com/sebastianhallen/Priscilla/master/LICENSE</licenseUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Control mouse actions with .net</description>
+    </metadata>
+</package>
